@@ -1,59 +1,30 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-
+import { Link } from "react-router-dom";
 export default function Home() {
-  const navigate = useNavigate();
 
-  const cards = [
-    {
-      title: "View Community Brew Profiles",
-      description: "Explore magical brews shared by the community.",
-      path: "/community-brews",
-      emoji: "🔮", // Crystal ball
-    },
-    {
-      title: "My Brew Profiles",
-      description: "Manage your own mystical brew creations.",
-      path: "/my-brews",
-      emoji: "✨", // Sparkles
-    },
-    {
-      title: "Create Brew Profile",
-      description: "Conjure a new brew profile from scratch.",
-      path: "/create-brew",
-      emoji: "🧹", // Wizard
-    },
-    {
-      title: "Start Brewing",
-      description: "Begin a brewing session with your selected spell.",
-      path: "/start-brewing",
-      emoji: "🍵", // Tea (elixir)
-    },
-  ];
-
+// w-full bg-hero bg-black/70 bg-blend-overlay bg-cover bg-center
+  
   return (
-    <MainLayout>
-      <div className="flex flex-col items-center py-10">
-        <h1 className="text-4xl font-bold text-yellow-300 mb-8 shadow-md">
-          Sorcery Dashboard
-        </h1>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 max-w-6xl">
-          {cards.map((card, idx) => (
-            <div
-              key={idx}
-              onClick={() => navigate(card.path)}
-              className="cursor-pointer bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-2xl hover:-translate-y-1 transform transition duration-200"
-            >
-              <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
-                {card.emoji} {card.title}
-              </h2>
-              <p className="text-gray-400">{card.description}</p>
+    <MainLayout>        
+      <main className="flex min-h-screen">
+        <div className="w-full justify-center bg-center gap-8 grid items-center">
+            <div className="rounded-xl flex flex-col p-8justify-center items-center text-white">
+                <h1 className="text-5xl flex pb-8 justify-center emphasis-text bg-gradient-to-b from-yellow-200 to-amber-900 bg-clip-text text-transparent" >
+                Share Your Legendary Elixirs
+                </h1>
+                <h2 className='body-text text-2xl mb-8'>
+                Join the Brewja Guild to chronicle your tea journeys, discover ancient community recipes, and master the perfect steep.
+                </h2>
+                <div className="flex flex-col items-center body-text text-xl">
+                    <Link to="/register" className="bg-amber-800 hover:bg-amber-700 hover:text-yellow-400 hover:scale-110 transition-all p-4 rounded-2xl mb-4">JOIN THE COMMUNITY</Link>
+                    <Link to="/community-brews" className="border-2 border-orange-400 bg-transparent backdrop-blur-2xl hover:text-yellow-400 hover:scale-110 transition-all p-4 rounded-2xl mb-4">BROWSE COMMUNITY BREWS</Link>
+                </div>
             </div>
-          ))}
+            <div>
+            </div>
         </div>
-      </div>
+      </main>
     </MainLayout>
   );
 }

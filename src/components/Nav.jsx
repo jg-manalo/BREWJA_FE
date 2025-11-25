@@ -12,47 +12,31 @@ export default function Nav() {
   };
 
   return (
-    <nav className="bg-purple-900 px-6 py-4 m-auto shadow-md flex justify-between items-center">
+    <nav className="bg-black/20 backdrop-blur-md p-4 flex justify-start w-full items-center sticky top-0 z-50 border-b border-white/10">
       {/* Logo / Brand */}
-      <div className="flex flex-col items-center">
-        <span className="text-white text-2xl font-bold tracking-wide flex items-center">
-          <span className="text-3xl mr-2">🧙‍♀️</span>
-          Brewha
-        </span>
-        <span className="text-purple-200 text-sm italic text-center">
-          Magic Steeped, Secrets Sipped.
-        </span>
+      <div className='grow'>
+        <Link to="/" className='text-4xl font-bold logo-header bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent'>
+          Brewja
+        </Link>
       </div>
-
-      {/* Navigation Links */}
-      <div className="flex space-x-6 text-white">
+      <div className='flex gap-8 justify-content items-end body-text text-white'>
         {!user ? (
-          <Link
-            to="/login"
-            className="hover:text-purple-300 transition-colors"
-          >
-            Login
-          </Link>
+          <>
+            <Link to="/login" className='border-2 border-orange-400 bg-transparent backdrop-blur-2xl hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>
+              Login
+            </Link>
+            <Link className='bg-amber-800 hover:bg-amber-700 hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>
+              Sign-up
+            </Link>
+          </>
         ) : (
-          <span className="bold bold flex flex-row gap-4 justify-between items-center w-full max-w-xs sm:max-w-md md:max-w-lg">
-            <div>
-              <Link to="/">Home</Link>
-            </div>
-            <div>
-              <Link to={`/user/${user.id ?? ''}`}>{user.username}</Link>
-            </div>
-            <div>
-              <button
-                onClick={handleLogout}
-                className="hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-0 p-0"
-                aria-label="Log out"
-              >
-                Log out
-              </button>
-            </div>
-          </span>
+          <>
+            <Link to={`/user/${user?.id}`}>{user?.name}</Link>
+            <Link onClick={handleLogout}>Log-out</Link>
+          </>
         )}
       </div>
+
     </nav>
   );
 }

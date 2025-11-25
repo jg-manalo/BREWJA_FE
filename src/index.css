@@ -1,0 +1,6 @@
+body{
+    background-image: url('/src/assets/mainbg.webp');
+    background-size: cover;
+    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
+    background-blend-mode: overlay;
+}

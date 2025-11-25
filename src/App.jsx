@@ -12,8 +12,9 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path='/' element={<Home/>}></Route>
         <Route path='/login' element={<Login/>}></Route>
-        <Route path='/' element={ user? <Home/> : <Login/>}/>
+        <Route path='/dashboard' element={ user? <Home/> : <Home/>}/>
         <Route path='/user/:id' element={ user? <UserProfile/> : <Login/> }></Route>
         <Route path='/community-brews' element={<CommunityBrews/>}></Route>
         <Route path="/tea/:id" element={<TeaDetails />} />

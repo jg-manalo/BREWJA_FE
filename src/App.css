@@ -1,1 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=UnifrakturMaguntia&display=swap');
 @import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap'); */
+
+.logo-header{
+    font-family: UnifrakturMaguntia;
+}
+
+.emphasis-text{
+    font-family: 'Almendra';
+    font-weight: bold;
+}
+
+.body-text{
+    font-family: 'Cormorant Garamond';
+    /* font-size: 24px; */
+}
+
+.bg-hero{
+    background-image: url('/src/assets/mainbg.webp');
+    background-size: cover;
+    /* background-position: center; */
+}
