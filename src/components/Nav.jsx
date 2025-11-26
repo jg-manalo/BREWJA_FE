@@ -25,7 +25,7 @@ export default function Nav() {
             <Link to="/login" className='border-2 border-orange-400 bg-transparent backdrop-blur-2xl hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>
               Login
             </Link>
-            <Link className='bg-amber-800 hover:bg-amber-700 hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>
+            <Link to="/register" className='bg-amber-800 hover:bg-amber-700 hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>
               Sign-up
             </Link>
           </>
