@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <div className="landing-page-bg">
         <MainLayout>        
-          <main className="flex min-h-screen">
+          <main className="flex flex-col justify-center min-h-screen">
             <div className="w-full justify-center bg-center gap-8 grid items-center">
                 <div className="rounded-xl flex flex-col sm:p-2 p-8 justify-center items-center text-white">
                     <h1 className="text-center text-6xl flex pb-8 justify-center emphasis-text bg-gradient-to-b from-yellow-200 to-amber-900 bg-clip-text text-transparent" >

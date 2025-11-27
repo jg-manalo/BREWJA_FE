@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function Nav() {
 
   return (
-    <footer className="bg-black/20 backdrop-blur-md p-4 flex justify-start w-full items-center sticky top-0 z-50 border-b border-white/10">
+    <footer className="bg-black/20 backdrop-blur-md p-4 flex justify-start w-full items-center border-b border-white/10">
         <Link to="/" className='text-2xl bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent font-bold logo-header'>
           Brewja
         </Link>

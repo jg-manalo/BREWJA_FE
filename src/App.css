@@ -23,6 +23,11 @@
     background-blend-mode: overlay;
 }
 
+label {
+    font-weight: bold;
+}
+
+
 .login-page-bg{
     background-image: url('/src/assets/tavern.webp');
     background-size: cover;

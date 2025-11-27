@@ -4,7 +4,7 @@ export default function MainLayout({ children }) {
   return (
     <>
         <MainNav/>
-        <div>{children}</div>
+        <div className='min-h-screen w-full'>{children}</div>
         <Footer/>
     </>
     
