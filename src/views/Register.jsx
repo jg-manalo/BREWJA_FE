@@ -38,6 +38,7 @@ export default function Register() {
         body: JSON.stringify(form)
       });
 
+      console.log(typeof(form.reset_password_config_id));
       console.log(form);
       if (!request.ok) {
         const errorData = await request.json();

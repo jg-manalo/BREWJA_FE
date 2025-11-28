@@ -24,14 +24,16 @@ export default function AuthProvider({children}) {
             const res = await fetch('/api/login',{
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({username, password}),
 
             });
-
+            
             if (!res.ok) {
-                throw new Error("Login failed");
+                const errorData = await res.json();
+                throw errorData;
             }
 
             const data = await res.json();
