@@ -1,6 +1,8 @@
 import MainLayout from "../layouts/MainLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import AppToaster from "../components/AppToaster";
+import toast from "react-hot-toast";
 
 export default function Register() {
 
@@ -39,6 +41,7 @@ export default function Register() {
       console.log(form);
       if (!request.ok) {
         const errorData = await request.json();
+        toast.error("Registration failed.");
         throw errorData.errors;
       } else{
         navigate('/login');
@@ -69,8 +72,9 @@ export default function Register() {
   return (
     <>
       <div className="login-page-bg">
-        <MainLayout>        
-          <main className="flex flex-col pt-8 min-h-screen body-text text-xl">
+        <MainLayout>
+          <main className="flex flex-col pt-8 lg:pb-8 min-h-screen body-text text-xl">
+            <AppToaster/>      
             <form onSubmit={handleRegister} className="flex flex-col justify-center items-center w-full">
               <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col lg:max-w-xl w-[80%] justify-center p-4 md:p-8 gap-y-2 md:gap-y-4">
                 <h1 className="flex justify-center emphasis-text lg:text-6xl text-4xl mx-auto">Brewja Guild</h1>
