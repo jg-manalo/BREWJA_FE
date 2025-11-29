@@ -15,11 +15,11 @@ export default function Nav() {
     <nav className="bg-black/20 backdrop-blur-md p-4 flex justify-start w-full items-center sticky top-0 z-50 border-b border-white/10">
       {/* Logo / Brand */}
       <div className='grow'>
-        <Link to="/" className='text-4xl font-bold logo-header bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent'>
+        <Link to="/" className='text-5xl font-bold logo-header bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent'>
           Brewja
         </Link>
       </div>
-      <div className='flex gap-8 justify-content items-end body-text text-white'>
+      <div className='flex gap-8 justify-content items-end body-text text-xl text-white'>
         {!user ? (
           <>
             <Link to="/login" className='border-2 border-orange-400 bg-transparent backdrop-blur-2xl hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>
@@ -30,10 +30,10 @@ export default function Nav() {
             </Link>
           </>
         ) : (
-          <>
-            <Link to={`/user/${user?.id}`}>{user?.name}</Link>
-            <Link onClick={handleLogout}>Log-out</Link>
-          </>
+          <div className='flex gap-4 text-xl'>
+            <Link to={`/user/${user?.id}`} className='hover:underline'>{user?.name}</Link>
+            <Link onClick={handleLogout} className='hover:underline'>Log-out</Link>
+          </div>
         )}
       </div>
 

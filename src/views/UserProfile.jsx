@@ -80,101 +80,107 @@ export default function UserProfile() {
         }
     }
   return (
-    <MainLayout>
-        <div className='bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto mt-8 grid'>
-            <h2 className='text-2xl font-bold mb-4'>Sorcerer's Profile</h2>
-            <form onSubmit={handleSubmit} className='flex flex-row gap-4' >
-                <div>
-                    <img src={defaultImage}
-                            alt="Tea"
-                            className="w-full h-44 object-cover"
-                        />
-                </div>
-                <div>
-                    <label htmlFor="name"  className='text-gray-400'>Full Name</label>
+    <>
+        <div className='update-profile-bg'>
+            <MainLayout>
+            <div className='bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto mt-8 grid min-h-screen w-full'>
+                <h2 className='text-2xl font-bold mb-4'>Sorcerer's Profile</h2>
+                <form onSubmit={handleSubmit} className='flex flex-row gap-4' >
                     <div>
-                        <input id="name" className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.name}
-                        onChange={e => setUser({...user, name : e.target.value})}
-                        required
-                        />
+                        <img src={defaultImage}
+                                alt="Tea"
+                                className="w-full h-44 object-cover"
+                            />
                     </div>
-                    <label htmlFor="username" className='text-gray-400'>Username</label>
                     <div>
-                        <input id ="username"className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.username}
-                        onChange={e => setUser({...user, username: e.target.value})}
-                        required
-                        />
+                        <label htmlFor="name"  className='text-gray-400'>Full Name</label>
+                        <div>
+                            <input id="name" className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.name}
+                            onChange={e => setUser({...user, name : e.target.value})}
+                            required
+                            />
+                        </div>
+                        <label htmlFor="username" className='text-gray-400'>Username</label>
+                        <div>
+                            <input id ="username"className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.username}
+                            onChange={e => setUser({...user, username: e.target.value})}
+                            required
+                            />
+                        </div>
+                        <label htmlFor="email" className='text-gray-400'>E-mail</label>
+                        <div>
+                            <input id="email" className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.email}
+                            onChange={e => setUser({...user, email: e.target.value})}
+                            />
+                        </div>
                     </div>
-                    <label htmlFor="email" className='text-gray-400'>E-mail</label>
-                    <div>
-                        <input id="email" className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.email}
-                        onChange={e => setUser({...user, email: e.target.value})}
-                        />
-                    </div>
-                </div>
-                <label htmlFor="password" className='text-gray-400'>New Password</label>
-                <div className="relative">
-                    <input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        className='w-full pr-10 border-gray-950 border rounded-md p-2 mb-4'
-                        value={user.password ?? ''}
-                        onChange={e => {
-                            const val = e.target.value;
-                            // clear confirmation when password is emptied
-                            setUser(prev => ({ 
-                            ...prev, 
-                            password: val, 
-                            ...(val ? {} : { password_confirmation: '' })
-                            }));
-                        }}
-                        minLength={8}
-                    />
-                    <button
-                        type="button"
-                        aria-label="Show password"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-                        onMouseDown={() => setShowPassword(true)}
-                        onMouseUp={() => setShowPassword(false)}
-                        onMouseLeave={() => setShowPassword(false)}
-                        onTouchStart={() => setShowPassword(true)}
-                        onTouchEnd={() => setShowPassword(false)}
-                    >
-                        {showPassword ? '🙈' : '👁️'}
-                    </button>
-                </div>
-
-                {user.password ? (
-                <>
-                    <label htmlFor="password_confirmation" className='text-gray-400'>Confirm New Password</label>
+                    <label htmlFor="password" className='text-gray-400'>New Password</label>
                     <div className="relative">
                         <input
-                            id="password_confirmation"
-                            type={showPasswordConfirm ? 'text' : 'password'}
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
                             className='w-full pr-10 border-gray-950 border rounded-md p-2 mb-4'
-                            value={user.password_confirmation ?? ''}
-                            onChange={e => setUser({...user, password_confirmation: e.target.value})}
+                            value={user.password ?? ''}
+                            onChange={e => {
+                                const val = e.target.value;
+                                // clear confirmation when password is emptied
+                                setUser(prev => ({ 
+                                ...prev, 
+                                password: val, 
+                                ...(val ? {} : { password_confirmation: '' })
+                                }));
+                            }}
                             minLength={8}
                         />
                         <button
                             type="button"
-                            aria-label="Show confirm password"
+                            aria-label="Show password"
                             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-                            onMouseDown={() => setShowPasswordConfirm(true)}
-                            onMouseUp={() => setShowPasswordConfirm(false)}
-                            onMouseLeave={() => setShowPasswordConfirm(false)}
-                            onTouchStart={() => setShowPasswordConfirm(true)}
-                            onTouchEnd={() => setShowPasswordConfirm(false)}
+                            onMouseDown={() => setShowPassword(true)}
+                            onMouseUp={() => setShowPassword(false)}
+                            onMouseLeave={() => setShowPassword(false)}
+                            onTouchStart={() => setShowPassword(true)}
+                            onTouchEnd={() => setShowPassword(false)}
                         >
-                            {showPasswordConfirm ? '🙈' : '👁️'}
+                            {showPassword ? '🙈' : '👁️'}
                         </button>
                     </div>
-                </>
-                ) : null}
-                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border rounded'>Update</button>
-                {error && <p className="text-red-500">{error}</p>}
-            </form>
+
+                    {user.password ? (
+                    <>
+                        <label htmlFor="password_confirmation" className='text-gray-400'>Confirm New Password</label>
+                        <div className="relative">
+                            <input
+                                id="password_confirmation"
+                                type={showPasswordConfirm ? 'text' : 'password'}
+                                className='w-full pr-10 border-gray-950 border rounded-md p-2 mb-4'
+                                value={user.password_confirmation ?? ''}
+                                onChange={e => setUser({...user, password_confirmation: e.target.value})}
+                                minLength={8}
+                            />
+                            <button
+                                type="button"
+                                aria-label="Show confirm password"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                                onMouseDown={() => setShowPasswordConfirm(true)}
+                                onMouseUp={() => setShowPasswordConfirm(false)}
+                                onMouseLeave={() => setShowPasswordConfirm(false)}
+                                onTouchStart={() => setShowPasswordConfirm(true)}
+                                onTouchEnd={() => setShowPasswordConfirm(false)}
+                            >
+                                {showPasswordConfirm ? '🙈' : '👁️'}
+                            </button>
+                        </div>
+                    </>
+                    ) : null}
+                    <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border rounded'>Update</button>
+                    {error && <p className="text-red-500">{error}</p>}
+                </form>
+            </div>
+            </MainLayout>             
         </div>
-    </MainLayout>
-  )
+    </>
+    
+  
+  );
 }

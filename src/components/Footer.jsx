@@ -4,12 +4,12 @@ export default function Nav() {
 
   return (
     <footer className="bg-black/20 backdrop-blur-md p-4 flex justify-start w-full items-center border-b border-white/10">
-        <Link to="/" className='text-2xl bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent font-bold logo-header'>
+        <Link to="/" className='text-5xl bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent font-bold logo-header'>
           Brewja
         </Link>
-      <div className='body-text flex justify-center text-white ml-auto grow items-center'>
-        © 2025 Jose Joaquin Manalo
-      </div>
+      <h1 className='body-text flex justify-center text-2xl text-white ml-auto grow items-center'>
+      © 2025 Brewja
+      </h1>
       <div className=''>
         <ul className='flex gap-2 text-white'>
           <li>
