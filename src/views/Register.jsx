@@ -27,6 +27,7 @@ export default function Register() {
 
    const handleRegister = async (e) => {
     e.preventDefault();
+    const requestToast = toast.loading("Processing Request...");
     
     try{
       const request = await fetch('/api/register', {
@@ -38,17 +39,17 @@ export default function Register() {
         body: JSON.stringify(form)
       });
 
-      console.log(typeof(form.reset_password_config_id));
-      console.log(form);
+
       if (!request.ok) {
         const errorData = await request.json();
         toast.error("Registration failed.");
         throw errorData.errors;
-      } else{
-        navigate('/login');
       }
 
+        toast.success("Registration successful.", {id : requestToast});
+        navigate('/login');
     } catch (error) {
+      toast.error("Registration failed.", {id : requestToast});
       setError(error);
     }
 
@@ -96,10 +97,14 @@ export default function Register() {
                   </div>
                   <div className="flex flex-col items-start">
                     <label htmlFor="security-question"><i>Security Question</i></label>  
-                    <select id="security-question" required className="rounded-lg w-full p-2 bg-stone-200" value={selectedQuestion} onChange={e => setForm({...form, reset_password_config_id: e.target.value}) || setSelectedQuestion(e.target.value)}>
-                      <option className="w-[80%] " disabled hidden value="">Select a security question...</option>
+                    <select id="security-question" required className="rounded-lg w-full p-2 bg-stone-200" value={selectedQuestion} onChange={ e =>{ 
+                      const val = e.target.value;
+                      const numValue = val? Number(val) : ""; 
+                      setForm({...form, reset_password_config_id : numValue});
+                      setSelectedQuestion(numValue)}}>
+                      <option className="w-[80%] " disabled hidden value="" >Select a security question...</option>
                       {securityQuestion.map((question) => (
-                        <option className="bg-amber-500/10 w-[80%]"key={question.id} value={question.id}>  {formatString(question.config)} </option>
+                          <option className="bg-amber-500/10 w-[80%]"key={question.id} value={question.id}>{formatString(question.config)} </option>
                       ))}
                     </select>
                   </div>

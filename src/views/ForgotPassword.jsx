@@ -25,8 +25,8 @@ export default function ForgotPassword(){
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
+        const requestToast = toast.loading("Processing Request...");
 
-        console.log(typeof(form.reset_password_config_id))
         try{
             const request = await fetch('/api/reset-password', {
                 method: 'POST',
@@ -36,15 +36,16 @@ export default function ForgotPassword(){
                 },
                 body: JSON.stringify(form)
             });
-
+            
             if (!request.ok) {
                 const errorData = await request.json();
                 console.log(errorData);
                 throw errorData;
             }
+            toast.success("Password reset successful.", {id : requestToast});
             navigate('/login')
         } catch (error) {
-         toast.error(error.message);
+         toast.error(error.message, {id : requestToast});
         }
     } 
 
@@ -55,8 +56,7 @@ export default function ForgotPassword(){
             if (!response.ok) {
               throw new Error("Failed to fetch security questions");
             }
-            const data = await response.json();
-            console.log(data);
+            const data = await response.json()
             setSecurityQuestion(data);
           } catch (error) {
             console.error("Error fetching security questions:", error);
@@ -69,8 +69,9 @@ export default function ForgotPassword(){
         <>
             <div className="forgot-password-page-bg">
                 <MainLayout>
+                    <AppToaster/>
                     <main className="flex flex-col pt-8 lg:pb-8 min-h-screen body-text text-xl">
-                        <AppToaster/>      
+                        {/* <AppToaster/> */}
                         <form onSubmit={handleResetPassword} className="flex flex-col justify-center items-center w-full">
                             <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col lg:max-w-xl w-[80%] justify-center p-4 md:p-8 gap-y-2 md:gap-y-4">
                                 <h1 className="flex justify-center emphasis-text lg:text-6xl text-4xl mx-auto">Forgot Password</h1>
@@ -86,7 +87,7 @@ export default function ForgotPassword(){
                                             const numValue = val? Number(val) : ""; 
                                             setForm({...form, reset_password_config_id : numValue});
                                             setSelectedQuestion(numValue)}}>
-                                            <option className="w-[80%] " disabled hidden value="">Select a security question...</option>
+                                            <option className="w-[80%] " disabled hidden value="" >Select a security question...</option>
                                             {securityQuestion.map((question) => (
                                                 <option className="bg-amber-500/10 w-[80%]"key={question.id} value={question.id}>{formatString(question.config)} </option>
                                             ))}
