@@ -19,7 +19,7 @@ export default function Nav() {
           Brewja
         </Link>
       </div>
-      <div className='flex gap-8 justify-content items-end body-text text-xl text-white'>
+      <div className='flex gap-4 justify-content items-end body-text text-xl text-white'>
         {!user ? (
           <>
             <Link to="/login" className='border-2 border-orange-400 bg-transparent backdrop-blur-2xl hover:text-yellow-400 px-4 p-2 rounded-2xl mb-4"'>

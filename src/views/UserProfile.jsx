@@ -3,7 +3,7 @@ import { useParams,  useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import defaultImage from '../assets/tea.png';
+
 
 export default function UserProfile() {
     const {id} = useParams();
@@ -16,9 +16,13 @@ export default function UserProfile() {
         password: '',
         password_confirmation: ''
     });
+
     const [error, setError] = useState(null);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [securityQuestion, setSecurityQuestion] = useState([]);
+    const [selectedQuestion, setSelectedQuestion] = useState("");
+    const [newSecurityAnswer, setNewSecurityAnswer] = useState("");
+
     
     useEffect(() => {
         const fetchUser = async () => {
@@ -33,6 +37,7 @@ export default function UserProfile() {
                     throw new Error("Failed to fetch user data");
                 }
                 const data = await res.json();
+                console.log(data);
                 setUser(data);
             }catch(err){
                 console.error("Error fetching user data:", err);
@@ -42,6 +47,22 @@ export default function UserProfile() {
 
         fetchUser();
     }, [id, token]);
+
+    useEffect(() => {
+        const fetchSecurityQuestions = async () => {
+        try {
+            const response = await fetch("/api/security-questions");
+            if (!response.ok) {
+            throw new Error("Failed to fetch security questions");
+            }
+            const data = await response.json();
+            setSecurityQuestion(data);
+        } catch (error) {
+            console.error("Error fetching security questions:", error);
+        } 
+        };
+        fetchSecurityQuestions();
+     } , []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -79,104 +100,138 @@ export default function UserProfile() {
             setError(err.message);
         }
     }
+
+    const formatString = (str) =>{
+        if(!str) return "";
+
+        return str.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    }
+
   return (
     <>
         <div className='update-profile-bg'>
             <MainLayout>
-            <div className='bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto mt-8 grid min-h-screen w-full'>
-                <h2 className='text-2xl font-bold mb-4'>Sorcerer's Profile</h2>
-                <form onSubmit={handleSubmit} className='flex flex-row gap-4' >
-                    <div>
-                        <img src={defaultImage}
-                                alt="Tea"
-                                className="w-full h-44 object-cover"
-                            />
-                    </div>
-                    <div>
-                        <label htmlFor="name"  className='text-gray-400'>Full Name</label>
-                        <div>
-                            <input id="name" className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.name}
-                            onChange={e => setUser({...user, name : e.target.value})}
-                            required
-                            />
-                        </div>
-                        <label htmlFor="username" className='text-gray-400'>Username</label>
-                        <div>
-                            <input id ="username"className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.username}
-                            onChange={e => setUser({...user, username: e.target.value})}
-                            required
-                            />
-                        </div>
-                        <label htmlFor="email" className='text-gray-400'>E-mail</label>
-                        <div>
-                            <input id="email" className='border-gray-950 border rounded-md p-2 mb-4'type="text" value={user.email}
-                            onChange={e => setUser({...user, email: e.target.value})}
-                            />
-                        </div>
-                    </div>
-                    <label htmlFor="password" className='text-gray-400'>New Password</label>
-                    <div className="relative">
-                        <input
-                            id="password"
-                            type={showPassword ? 'text' : 'password'}
-                            className='w-full pr-10 border-gray-950 border rounded-md p-2 mb-4'
-                            value={user.password ?? ''}
-                            onChange={e => {
-                                const val = e.target.value;
-                                // clear confirmation when password is emptied
-                                setUser(prev => ({ 
-                                ...prev, 
-                                password: val, 
-                                ...(val ? {} : { password_confirmation: '' })
-                                }));
-                            }}
-                            minLength={8}
-                        />
-                        <button
-                            type="button"
-                            aria-label="Show password"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-                            onMouseDown={() => setShowPassword(true)}
-                            onMouseUp={() => setShowPassword(false)}
-                            onMouseLeave={() => setShowPassword(false)}
-                            onTouchStart={() => setShowPassword(true)}
-                            onTouchEnd={() => setShowPassword(false)}
-                        >
-                            {showPassword ? '🙈' : '👁️'}
-                        </button>
-                    </div>
+                <main className="flex flex-col justify-center items-center pt-8 pb-8 body-text">
+                    {/* Added max-w-7xl to prevent cards from stretching too wide on huge screens */}
+                    <div className='flex flex-col w-full max-w-7xl lg:grid lg:grid-cols-2 lg:gap-8 gap-y-6 px-4'>
+                        
+                        {/* --- CARD 1: PERSONAL INFO --- */}
+                        <form action="" className="flex flex-col h-full w-full">
+                            {/* increased opacity to /95 and added shadow-xl for pop */}
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
+                                <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Your Personal Information</h1>
+                                
+                                <div className="flex flex-col">
+                                    {/* Removed <i>, added font-semibold and distinct text color */}
+                                    <label htmlFor="full-name" className="font-sans font-semibold text-amber-900 mb-1">Full Name</label>  
+                                    {/* Changed bg to stone-50 for higher contrast input area */}
+                                    <input id="full-name" required value={user?.name} onChange={e => setUser({...user, name : e.target.value})} type="text" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
+                                </div>
 
-                    {user.password ? (
-                    <>
-                        <label htmlFor="password_confirmation" className='text-gray-400'>Confirm New Password</label>
-                        <div className="relative">
-                            <input
-                                id="password_confirmation"
-                                type={showPasswordConfirm ? 'text' : 'password'}
-                                className='w-full pr-10 border-gray-950 border rounded-md p-2 mb-4'
-                                value={user.password_confirmation ?? ''}
-                                onChange={e => setUser({...user, password_confirmation: e.target.value})}
-                                minLength={8}
-                            />
-                            <button
-                                type="button"
-                                aria-label="Show confirm password"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-                                onMouseDown={() => setShowPasswordConfirm(true)}
-                                onMouseUp={() => setShowPasswordConfirm(false)}
-                                onMouseLeave={() => setShowPasswordConfirm(false)}
-                                onTouchStart={() => setShowPasswordConfirm(true)}
-                                onTouchEnd={() => setShowPasswordConfirm(false)}
-                            >
-                                {showPasswordConfirm ? '🙈' : '👁️'}
-                            </button>
+                                <div className="flex flex-col items-start">
+                                    <label htmlFor="username" className="font-sans font-semibold text-amber-900 mb-1">Username</label>  
+                                    <input id="username" value={user?.username} onChange={e => setUser({...user, username : e.target.value})} required type="text" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
+                                    {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.username}</p>}
+                                </div>
+
+                                <div className="flex flex-col items-start">
+                                    <label htmlFor="email" className="font-sans font-semibold text-amber-900 mb-1">E-mail</label>  
+                                    <input id="email" value={user?.email} onChange={e => setUser({...user, email : e.target.value})} required type="email" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
+                                    {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.email}</p>}
+                                </div>
+
+                                <button className="mt-4 mx-auto cursor-pointer bg-gradient-to-b from-emerald-500 to-teal-800 hover:to-teal-700 text-white shadow-md hover:shadow-emerald-400/50 hover:scale-105 transition-all duration-200 border-2 border-green-950 px-8 py-3 rounded-xl font-bold tracking-wide">SAVE CHANGES</button>
+                            </div>
+                        </form>
+                        
+                        {/* --- CARD 2: SECURITY QUESTION --- */}
+                        <form action="" className="flex flex-col h-full w-full">
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
+                                <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Security Question</h1>
+                                <p className='font-serif text-amber-950'>Whenever you feel your security is compromised, it is better to change your security question.</p>
+                                <div className="flex flex-col">
+                                    <label htmlFor="security-question" className="font-sans font-semibold text-amber-900 mb-1">New Security Question</label>  
+                                    <select id="security-question" required className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none" value={selectedQuestion} onChange={ e =>{ 
+                                        const val = e.target.value;
+                                        const numValue = val? Number(val) : ""; 
+                                        setUser({...user, reset_password_config_id : numValue});
+                                        setSelectedQuestion(numValue)}}>
+                                        <option disabled hidden value="" >Select a security question...</option>
+                                        {securityQuestion.map((question) => (
+                                            <option className="bg-white text-stone-900" key={question.id} value={question.id}>{formatString(question.config)} </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label htmlFor="security-answer" className="font-sans font-semibold text-amber-900 mb-1">New Security Answer</label>  
+                                    <input id="security-answer" value={newSecurityAnswer ?? ''} onChange={e => setUser({...user, reset_password_config_answer : e.target.value.toUpperCase()})} required type="text" className="font-sans uppercase bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                </div>
+
+                                <button className="mt-4 mx-auto cursor-pointer bg-gradient-to-b from-emerald-500 to-teal-800 hover:to-teal-700 text-white shadow-md hover:shadow-emerald-400/50 hover:scale-105 transition-all duration-200 border-2 border-green-950 px-8 py-3 rounded-xl font-bold tracking-wide">SAVE CHANGES</button>
+                            </div>
+                        </form>
+
+                        {/* --- CARD 3: PASSWORD (Fixed Security Logic) --- */}
+                        <form action="" className="flex flex-col h-full w-full">
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
+                                <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Password</h1>
+                                
+                                {/* ADDED: Current Password Field */}
+                                <div className="flex flex-col items-start">
+                                    <label htmlFor="current-password" className="font-sans font-semibold text-amber-900 mb-1">Current Password</label>  
+                                    <input id="current-password" required type="password" placeholder="Verify it's you..." className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                </div>
+                                
+                                <hr className="border-amber-900/20 my-2"/>
+
+                                <div className="flex flex-col items-start">
+                                    <label htmlFor="new-password" className="font-sans font-semibold text-amber-900 mb-1">New Password</label>  
+                                    <input id="new-password" required type="password" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                    {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.username}</p>}
+                                </div>
+
+                                <div className="flex flex-col items-start">
+                                    <label htmlFor="confirm-password" className="font-sans font-semibold text-amber-900 mb-1">Confirm New Password</label>  
+                                    <input id="confirm-password" required type="password" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                    {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.email}</p>}
+                                </div>
+
+                                <button className="mt-4 mx-auto cursor-pointer bg-gradient-to-b from-emerald-500 to-teal-800 hover:to-teal-700 text-white shadow-md hover:shadow-emerald-400/50 hover:scale-105 transition-all duration-200 border-2 border-green-950 px-8 py-3 rounded-xl font-bold tracking-wide">UPDATE PASSWORD</button>
+                            </div>
+                        </form>
+
+                        {/* --- CARD 4: DELETE ACCOUNT (Better centering) --- */}
+                        <div className='flex flex-col h-full w-full'>    
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-20% to-orange-300/80 backdrop-blur-sm rounded-2xl flex flex-col h-full justify-center items-center p-6 md:p-8 gap-y-6 shadow-xl border border-amber-900/20 text-center">
+                                <div>
+                                    <h1 className='emphasis-text text-2xl text-red-900 mb-2'>Delete Your Account</h1>
+                                    <h2 className="font-serif text-amber-950">Tread with caution, this action cannot be undone.</h2>
+                                </div>
+                                <button onClick={() => setConfirmDelete(true)} className="cursor-pointer bg-gradient-to-b from-red-500 to-red-900 hover:to-red-800 text-white shadow-md hover:shadow-red-400/50 hover:scale-105 transition-all duration-200 border-2 border-red-950 px-8 py-3 rounded-xl font-bold tracking-wide">DELETE ACCOUNT</button>
+                            </div>
                         </div>
-                    </>
-                    ) : null}
-                    <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border rounded'>Update</button>
-                    {error && <p className="text-red-500">{error}</p>}
-                </form>
-            </div>
+
+                    </div>
+                </main>    
+                
+                {/* MODAL (Kept mostly the same, just touched up colors) */}
+                {confirmDelete && (
+                    <form action=""  className="fixed inset-0 z-50 flex flex-col justify-center items-center w-full bg-black/70 backdrop-blur-sm p-4">
+                        <div className="bg-gradient-to-br from-orange-100 via-amber-200 to-orange-300 rounded-2xl flex flex-col lg:max-w-xl w-[90%] justify-center p-8 gap-y-6 shadow-2xl border-2 border-amber-500">
+                            <div className='flex justify-between items-start'>
+                                <h1 className='emphasis-text text-xl grow text-amber-950 pr-4'>Are you sure you want to delete your account?</h1>
+                                <button type="button" onClick={() => setConfirmDelete(false)} className='text-amber-900 hover:text-amber-700 font-bold px-2'>✕</button>
+                            </div>
+                            <h2 className="font-serif text-amber-950">All the adventures you have taken will be obliterated into oblivion.</h2>
+                            <div className="flex justify-center gap-4">
+                                <button type="button" onClick={() => setConfirmDelete(false)} className="cursor-pointer bg-transparent border-2 border-amber-900/30 text-amber-900 hover:bg-amber-900/10 px-6 py-3 rounded-xl font-bold">CANCEL</button>
+                                <button className="cursor-pointer bg-gradient-to-b from-red-600 to-red-900 hover:shadow-red-500/50 hover:scale-105 border-2 border-red-950 px-8 py-3 rounded-xl text-white font-bold transition-all">GOODBYE</button>
+                            </div>
+                        </div>
+                    </form>
+                )}
+
             </MainLayout>             
         </div>
     </>

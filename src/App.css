@@ -19,6 +19,7 @@
 .landing-page-bg{
     background-image: url('/src/assets/mainbg.webp');
     background-size: cover;
+    background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     background-blend-mode: overlay;
 }
@@ -31,13 +32,23 @@ label {
 .login-page-bg{
     background-image: url('/src/assets/tavern.webp');
     background-size: cover;
+    background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     background-blend-mode: overlay;
 }
 
 .forgot-password-page-bg{
+    background-image: url('/src/assets/library_close.webp');
+    background-size: cover;
+    background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
+    background-blend-mode: overlay;
+}
+
+.sign-up-bg{
     background-image: url('/src/assets/library.webp');
     background-size: cover;
+    background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     background-blend-mode: overlay;
 }

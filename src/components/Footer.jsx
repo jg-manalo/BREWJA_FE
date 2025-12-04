@@ -7,7 +7,7 @@ export default function Nav() {
         <Link to="/" className='text-5xl bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent font-bold logo-header'>
           Brewja
         </Link>
-      <h1 className='body-text flex justify-center text-2xl text-white ml-auto grow items-center'>
+      <h1 className='body-text flex invisible lg:visible justify-center text-2xl text-white ml-auto grow items-center'>
       © 2025 Brewja
       </h1>
       <div className=''>
