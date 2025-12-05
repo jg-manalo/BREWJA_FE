@@ -13,7 +13,7 @@ export default function Home() {
                     <h1 className="text-center text-6xl flex pb-8 justify-center emphasis-text bg-gradient-to-b from-yellow-200 to-amber-900 bg-clip-text text-transparent" >
                     Share Your Legendary Elixirs
                     </h1>
-                    <h2 className='body-text text-2xl mb-8 text-justify'>
+                    <h2 className='font-serif font-light text-xl mb-8 text-justify'>
                     Join the Brewja Guild to chronicle your tea journeys, discover ancient community recipes, and master the perfect steep.
                     </h2>
                     <div className="flex gap-x-4 body-text text-xl">

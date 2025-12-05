@@ -70,18 +70,18 @@ export default function ForgotPassword(){
             <div className="forgot-password-page-bg">
                 <MainLayout>
                     <AppToaster/>
-                    <main className="flex flex-col pt-8 lg:pb-8 min-h-screen body-text text-xl">
+                    <main className="flex flex-col pt-8 lg:pb-8 min-h-screen font-serif text-lg">
                         {/* <AppToaster/> */}
                         <form onSubmit={handleResetPassword} className="flex flex-col justify-center items-center w-full">
                             <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col lg:max-w-xl w-[80%] justify-center p-4 md:p-8 gap-y-2 md:gap-y-4">
                                 <h1 className="flex justify-center emphasis-text lg:text-6xl text-4xl mx-auto">Forgot Password</h1>
                                 <div className="flex flex-col gap-y-4">
                                     <div className="flex flex-col items-start">
-                                        <label htmlFor="username"><i>Username</i></label>  
+                                        <label htmlFor="username">Username</label>  
                                         <input id="username" value={form.username?? ''} onChange={e => setForm({...form, username : e.target.value})} required type="text" className="rounded-lg w-full p-2 bg-stone-200"/>
                                     </div>
                                     <div className="flex flex-col items-start">
-                                        <label htmlFor="security-question"><i>Security Question</i></label>  
+                                        <label htmlFor="security-question">Security Question</label>  
                                         <select id="security-question" required className="rounded-lg w-full p-2 bg-stone-200" value={selectedQuestion} onChange={ e =>{ 
                                             const val = e.target.value;
                                             const numValue = val? Number(val) : ""; 
@@ -94,19 +94,19 @@ export default function ForgotPassword(){
                                         </select>
                                     </div>
                                     <div className="flex flex-col items-start">
-                                        <label htmlFor="security-answer"><i>Security Answer</i></label>  
+                                        <label htmlFor="security-answer">Security Answer</label>  
                                         <input id="security-answer" autoComplete="off" value={form.reset_password_config_answer?? ''} onChange={e => setForm({...form, reset_password_config_answer : e.target.value.toUpperCase()})} required type="text" className="rounded-lg w-full p-2 bg-stone-200"/>
                                     </div>
                                     <div className="flex flex-col items-start">
-                                        <label htmlFor="password"><i>New Password</i></label>  
+                                        <label htmlFor="password">New Password</label>  
                                         <input id="password" value={form.new_password?? ''} onChange={e => setForm({...form, new_password : e.target.value})} required type="password" className="rounded-lg w-full p-2 bg-stone-200"/>
                                     </div>
                                     <div className="flex flex-col items-start">
-                                        <label htmlFor="password-confirmation"><i>Confirm New Password</i></label>  
+                                        <label htmlFor="password-confirmation">Confirm New Password</label>  
                                         <input id="password-confirmation" value={form.new_password_confirmation?? ''} onChange={e => setForm({...form, new_password_confirmation : e.target.value})} disabled={!form.new_password} required type="password" className={`rounded-lg w-full p-2 ${!form.new_password ? "bg-stone-200/40" :  "bg-stone-200"}`}/>
                                     </div>
                                     <div className="flex flex-col justify-items-center">
-                                         <button className="mx-auto cursor-pointer bg-radial from-emerald-100 via-green-600 to-teal-900 hover:shadow-emerald-400 hover:scale-110 hover:shadow-lg/50 border-2 border-green-950 px-8 py-4 rounded-2xl text-gray-950 font-bold" >RESET PASSWORD</button>
+                                        <button className="mt-4 mx-auto cursor-pointer bg-gradient-to-b from-emerald-500 to-teal-800 hover:to-teal-700 text-white shadow-md hover:shadow-emerald-400/50 hover:scale-105 transition-all duration-200 border-2 border-green-950 px-8 py-3 rounded-xl font-bold tracking-wide" >RESET PASSWORD</button>
                                     </div>
                                 </div>
                             </div>

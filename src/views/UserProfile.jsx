@@ -3,12 +3,13 @@ import { useParams,  useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-
+import toast from 'react-hot-toast';
+import AppToaster from '../components/AppToaster';
 
 export default function UserProfile() {
     const {id} = useParams();
     const navigate = useNavigate();
-    const {token} = useContext(AuthContext);
+    const {token, logout} = useContext(AuthContext);
     const [user, setUser] = useState({
         name: '',
         username: '',
@@ -37,67 +38,72 @@ export default function UserProfile() {
                     throw new Error("Failed to fetch user data");
                 }
                 const data = await res.json();
-                console.log(data);
                 setUser(data);
+
             }catch(err){
                 console.error("Error fetching user data:", err);
                 setError(err.message);
+                navigate('/');
             }
         }
 
         fetchUser();
-    }, [id, token]);
+    }, [id, token, navigate]);
 
     useEffect(() => {
         const fetchSecurityQuestions = async () => {
-        try {
-            const response = await fetch("/api/security-questions");
-            if (!response.ok) {
-            throw new Error("Failed to fetch security questions");
-            }
-            const data = await response.json();
-            setSecurityQuestion(data);
-        } catch (error) {
-            console.error("Error fetching security questions:", error);
-        } 
+            try {
+                const response = await fetch("/api/security-questions");
+                if (!response.ok) {
+                throw new Error("Failed to fetch security questions");
+                }
+                const data = await response.json();
+                setSecurityQuestion(data);
+            } catch (error) {
+                console.error("Error fetching security questions:", error);
+            } 
         };
         fetchSecurityQuestions();
      } , []);
 
-    const handleSubmit = async (e) => {
+    const handleUpdatePersonalInfo = async (e) => {
         e.preventDefault();
-        try{
-            const updateUser  = { ...user };
-
-            if(!updateUser.password){
-                delete updateUser.password;
-                delete updateUser.password_confirmation;
-            }
-
-            const res = await fetch(`/api/user/${id}`, {
+        const requestToast = toast.loading("Processing Request..."); 
+        
+        try{ 
+            const res = await fetch(`/api/user/update-personal-info/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept' : 'application/json',
                     Authorization : `Bearer ${token}`
                 },
                 body: JSON.stringify(user)
             });
-            if (!res.ok) {
-                throw new Error("Failed to update user data");
-            }
+
+
             const data = await res.json();
+
+            if (!res.ok) {
+               const errorData = data.errors;
+               throw errorData;
+            }
+            
             setUser(prev => ({
                 ...prev,
                 ...data,
-                password: '',
-                password_confirmation: ''
             }));
-            console.log("User data updated successfully", data);
+
             setError(null);
-            navigate(`/`);
-        }catch(err){
-            console.error("Error updating user data:", err);
-            setError(err.message);
+            toast.success("Updated personal information successfully.", {id : requestToast});
+            
+            setTimeout(() => {
+                logout(); 
+            }, 2000);
+            logout();
+        }catch(error){
+            toast.error("Error updating user data.", {id : requestToast});
+            setError(error);
         }
     }
 
@@ -111,12 +117,13 @@ export default function UserProfile() {
     <>
         <div className='update-profile-bg'>
             <MainLayout>
+                <AppToaster/>
                 <main className="flex flex-col justify-center items-center pt-8 pb-8 body-text">
                     {/* Added max-w-7xl to prevent cards from stretching too wide on huge screens */}
                     <div className='flex flex-col w-full max-w-7xl lg:grid lg:grid-cols-2 lg:gap-8 gap-y-6 px-4'>
                         
                         {/* --- CARD 1: PERSONAL INFO --- */}
-                        <form action="" className="flex flex-col h-full w-full">
+                        <form onSubmit={handleUpdatePersonalInfo} className="flex flex-col h-full w-full">
                             {/* increased opacity to /95 and added shadow-xl for pop */}
                             <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
                                 <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Your Personal Information</h1>
