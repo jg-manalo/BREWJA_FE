@@ -156,6 +156,7 @@ export default function UserProfile() {
             setError(error);
         }
     }
+
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
         const requestToast = toast.loading("Processing Request..."); 
@@ -197,6 +198,40 @@ export default function UserProfile() {
 
         }catch(error){
             toast.error("Error updating password.", {id : requestToast});
+            setError(error);
+        }
+    }
+
+    const handleDeleteUser = async (e) => {
+        e.preventDefault();
+        const requestToast = toast.loading("Processing Request..."); 
+        
+        try{ 
+            const res = await fetch(`/api/user/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept' : 'application/json',
+                    Authorization : `Bearer ${token}`
+                },
+            });
+
+
+            const data = await res.json();
+            console.log(data);
+            if (!res.ok) {
+               const errorData = data.errors;
+               throw errorData;
+            }
+            
+            setError(null);
+
+            toast.success("Account deleted successfully.", {id : requestToast});
+            setTimeout(() => {
+                logout(); 
+            }, 2000);  
+        }catch(error){
+            toast.error("Error deleting account.", {id : requestToast});
             setError(error);
         }
     }
@@ -321,7 +356,7 @@ export default function UserProfile() {
                 
                 {/* MODAL (Kept mostly the same, just touched up colors) */}
                 {confirmDelete && (
-                    <form action=""  className="fixed inset-0 z-50 flex flex-col justify-center items-center w-full bg-black/70 backdrop-blur-sm p-4">
+                    <form onSubmit={handleDeleteUser}  className="fixed inset-0 z-50 flex flex-col justify-center items-center w-full bg-black/70 backdrop-blur-sm p-4">
                         <div className="bg-gradient-to-br from-orange-100 via-amber-200 to-orange-300 rounded-2xl flex flex-col lg:max-w-xl w-[90%] justify-center p-8 gap-y-6 shadow-2xl border-2 border-amber-500">
                             <div className='flex justify-between items-start'>
                                 <h1 className='emphasis-text text-xl grow text-amber-950 pr-4'>Are you sure you want to delete your account?</h1>
