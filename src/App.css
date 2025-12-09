@@ -54,8 +54,9 @@ label {
 }
 
 .update-profile-bg{
-    background-image: url('/src/assets/hom.png');
+    background-image: url('/src/assets/hom.webp');
     background-size: cover;
+    background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     background-blend-mode: overlay;
 }

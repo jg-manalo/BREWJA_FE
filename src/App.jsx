@@ -6,6 +6,7 @@ import TeaDetails from './views/TeaDetails'
 import Login from './views/Login'
 import Dashboard from './views/Dashboard'
 import Register from './views/Register'
+import CreateBrew  from './views/CreateBrew';
 import ForgotPassword from './views/ForgotPassword'
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
@@ -19,6 +20,7 @@ function App() {
         <Route path='/login' element={<Login/>}></Route>
         <Route path='/register' element={<Register/>}></Route>
         <Route path='/forgot-password' element={<ForgotPassword/>}></Route>
+        <Route path='create-brew' element={user? <CreateBrew/> : <Home/>}></Route>
         {/* <Route path='/dashboard' element={ user? <Dashboard/> : <Home/>}/> */}
         <Route path='/user/:id' element={ user? <UserProfile/> : <Login/> }></Route>
         <Route path='/community-brews' element={<CommunityBrews/>}></Route>
