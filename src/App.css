@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Modern+Antiqua&family=UnifrakturMaguntia&display=swap');
 @import "tailwindcss";
-/* @import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap'); */
+
 
 .logo-header{
     font-family: UnifrakturMaguntia;
@@ -17,7 +17,7 @@
 }
 
 .complementary-emphasis{
-    font-family: Lato;
+    font-family: Modern Antiqua;
 }
 
 .landing-page-bg{
