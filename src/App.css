@@ -24,14 +24,6 @@
     background-blend-mode: overlay;
 }
 
-.create-brews-page-bg{
-    background-image: url('/src/assets/brews.png');
-    background-size: cover;
-    background-position: center;
-    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
-    background-blend-mode: overlay;
-}
-
 label {
     font-weight: bold;
 }
