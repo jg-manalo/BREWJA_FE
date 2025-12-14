@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import defaultImage from '../assets/tea.png';
+import LeafBadge from "../components/LeafBadgeButton";
+import { leafTypeColors } from "../constants/LeafTypeColors";
 
 export default function CreateBrew(){
     const [showLeafOption, setShowLeafOption] = useState(false);
@@ -92,19 +94,29 @@ export default function CreateBrew(){
 
         setBrew({...brew, image : file, imagePreview : URL.createObjectURL(file)});
     }
+
+
     return (
         <>
-            <div className="update-profile-bg">
+            <div className="create-brews-page-bg">
                 <MainLayout>
                     <main className="flex flex-col min-h-screen justify-center pt-8 pb-8 w-full">
                         <AppToaster />
-                        <form onSubmit={handleSubmitBrew} className='flex flex-row gap-x-2 w-full  justify-center'>
-                            <div className="flex flex-col min-h-[25%]  p-4 gap-y-4 bg-amber-300">
-                                <div className="flex flex-col items-end">
-                                    <button type="button" onClick={() => setShowLeafOption(true)} className="cursor-pointer">{brew.leaf_type 
+                        <form onSubmit={handleSubmitBrew} className='flex gap-y-4 lg:max-w-full lg:w-full  justify-center '>
+                            <div className="flex flex-col rounded-lg p-4 gap-y-4 bg-linear-45 from-indigo-100 to-red-100 shadow-xl lg:w-[50%]  h-fit">
+                                <div className="flex flex-row items-start">
+                                    <div className="flex flex-grow">
+                                        <label className="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked={brew.is_private || false} onChange={() => setBrew({...brew, is_private : !brew.is_private})} className="sr-only peer"/>
+                                            <div className="bg-indigo-300 relative w-9 h-5 bg-neutral-quaternary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand"></div>
+                                            <span className="select-none ms-3 text-sm font-medium text-heading">{brew.is_private? `Private` : `Public`}</span>
+                                        </label>
+                                    </div>
+                                    <LeafBadge typeId={brew.leaf_type} leafList={leafType} onEdit={() => setShowLeafOption(true)}>
+                                        {brew.leaf_type 
                                         ? leafType.find(l => l.id == brew.leaf_type)?.type 
-                                        : `Leaf Type`
-                                    }</button>
+                                        : `Select Leaf Type`}                                     
+                                    </LeafBadge>
                                     {error && (<p className="text-red-500 lg:text-xs font-serif">{error.leaf_type}</p>)}
                                 </div>
                                 <div className="flex flex-col items-center gap-y-4">
@@ -159,14 +171,18 @@ export default function CreateBrew(){
                             </div>
                             {showLeafOption && (
                                 <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/20 backdrop-blur-sm">
-                                    <div className="bg-gradient-to-br from-orange-100 via-amber-200 to-orange-300 rounded-2xl flex flex-col lg:max-w-xl w-[90%] justify-center p-8 gap-y-6 shadow-2xl border-2 border-amber-500">
-                                        <button type="button" onClick={() => setShowLeafOption(false)}>Close</button>
-                                        <h1>Leaf Type</h1>
-                                        <div>
+                                    <div className="bg-linear-45 from-indigo-100 to-red-100 rounded-2xl flex flex-col lg:max-w-xl w-[90%] justify-center h-fit p-8 gap-y-6 shadow-2xl border-2 border-red-900">
+                                        <div className="flex flex-col gap-y-1">    
+                                            <div className="flex justify-end">
+                                                <button type="button" onClick={() => setShowLeafOption(false)} className="text-amber-900 hover:text-amber-700 font-bold px-2 cursor-pointer">✕</button>
+                                            </div>
+                                            <h1 className="emphasis-text text-4xl m-auto">Leaf Type</h1>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-x-2 gap-y-2 items-center">
                                             {leafType.map((leaf) => (
-                                                <div key={leaf.id}>
+                                                <div key={leaf.id} className={`${leafTypeColors[leaf.id]} rounded-full flex items-center gap-3 px-4 py-2`}>
+                                                    <input type="radio" required name="leaf_selection" value={leaf.id} checked={brew.leaf_type == leaf.id} onChange={e => setBrew({...brew, leaf_type : e.target.value})} id={`leaf-${leaf.id}`} className="cursor-pointer"/> 
                                                     <label htmlFor={`leaf-${leaf.id}`}>{leaf.type}</label> 
-                                                    <input type="radio" required name="leaf_selection" value={leaf.id} checked={brew.leaf_type == leaf.id} onChange={e => setBrew({...brew, leaf_type : e.target.value})} id={`leaf-${leaf.id}`}/> 
                                                 </div>
                                             ))}
                                         </div>
