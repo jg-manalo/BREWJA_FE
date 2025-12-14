@@ -19,7 +19,7 @@ export default function CreateBrew(){
         leaf_type: null,
         minutes: null,
         seconds: null,
-        sweetener: '',
+        sweetener: 'None',
         tsp_sweetener : null,
         fluid_oz : null,
         is_private : false,
@@ -150,7 +150,7 @@ export default function CreateBrew(){
                                 {brew.sweetener !== 'None' && (
                                     <div className="flex items-start gap-x-2 ">
                                         <label htmlFor="tsp-sweetener">tsp:</label>
-                                        <input type="number" className="flex flex-col"min={0} placeholder="1 tsp" id="tsp-sweetener" value={brew.tsp_sweetener?? undefined} onChange={e => setBrew({...brew, tsp_sweetener : e.target.valueAsNumber})}/>
+                                        <input type="number" className="flex flex-col"min={0} placeholder="1 tsp" id="tsp-sweetener" value={brew.tsp_sweetener?? ""} onChange={e => setBrew({...brew, tsp_sweetener: isNaN(e.target.valueAsNumber) ? null : e.target.valueAsNumber})}/>
                                     </div>
                                 )}
                                <div className="flex items-center justify-start gap-2 flex-wrap">
