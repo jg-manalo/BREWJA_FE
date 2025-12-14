@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=UnifrakturMaguntia&display=swap');
 @import "tailwindcss";
 /* @import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap'); */
 
@@ -16,8 +16,20 @@
     /* font-size: 24px; */
 }
 
+.complementary-emphasis{
+    font-family: Lato;
+}
+
 .landing-page-bg{
     background-image: url('/src/assets/mainbg.webp');
+    background-size: cover;
+    background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
+    background-blend-mode: overlay;
+}
+
+.create-brews-page-bg{
+    background-image: url('/src/assets/brews.png');
     background-size: cover;
     background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
