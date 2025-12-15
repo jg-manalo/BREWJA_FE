@@ -1,7 +1,7 @@
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/Card';
 import { useState, useEffect } from 'react';
-
+import Pagination from '../components/Pagination';
 export default function CommunityBrews() {
   const [teas, setTeas] = useState([]);
 
@@ -23,16 +23,20 @@ export default function CommunityBrews() {
     fetchBrewProfiles();
   }, []);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+  const totalPages = Math.ceil(teas.length/ itemsPerPage);
+  const currentData = teas.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   return (
     <div className='update-profile-bg bg-gray-900/60'>
       <MainLayout>
-        <div className="min-h-screen  py-8">
+        <div className="min-h-screen w-full py-8">
           <h1 className="text-4xl font-bold text-yellow-300 text-center mb-8 shadow-md">
             Community Brew Profiles
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 items-stretch">
-            {teas.length > 0 ? (
-              teas.map((tea) => (
+            {currentData.length > 0 ? (
+              currentData.map((tea) => (
                 <Card
                   key={tea.id}
                   tea={tea}
@@ -42,6 +46,9 @@ export default function CommunityBrews() {
             ) : (
               <p className="text-gray-400 text-center col-span-full">Loading teas...</p>
             )}
+          </div>
+          <div className="flex justify-center items-center w-full mt-6">
+            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}/>
           </div>
         </div>
       </MainLayout>
