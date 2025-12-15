@@ -13,7 +13,7 @@ export default function StartBrewing(){
     const [brewProfile, setBrewProfile] = useState([]);
     const [iotStatus, setIOTStatus] = useState({
         connectivity : 'OFFLINE',
-        current_handle : ''
+        current_handle : null
     });
     const [searchQuery, setSearchQuery] = useState("");        
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +24,7 @@ export default function StartBrewing(){
 
     const fetchBrewProfiles = useCallback(async (query= "") => {
         try{
-            let url = isPrivate? '/api/brewprofile/owned' : '/api/brewprofile'
+            let url = isPrivate? '/api/brewprofile/owned-private' : '/api/brewprofile'
             
             if(query){
                 url += `?title=${encodeURIComponent(query)}`
@@ -69,7 +69,7 @@ export default function StartBrewing(){
 
     const handleBrew = (e) => {
        e.preventDefault();
-       setIOTStatus({...iotStatus, current_handle : e.target.value})
+       setIOTStatus({...iotStatus, current_handle : e.target.value, connectivity : 'BUSY'});
     }
     return (
         <>
