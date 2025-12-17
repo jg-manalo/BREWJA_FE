@@ -16,7 +16,7 @@ export default function BrewModal({tea, onClose}){
     return (
         <>
             {/* 1. Main container: Centers content and prevents page scroll */}
-            <main className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-3xl p-4 font-serif">
+            <main className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4 font-serif">
                 
                     {/* Close Button: Absolute positioned to stay visible */}
                     <button 

@@ -243,9 +243,21 @@ export default function UserProfile() {
         return str.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
     }
 
+    useEffect(() => {
+            if (confirmDelete) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'unset';
+            }
+
+            return () => {
+                document.body.style.overflow = 'unset';
+            };
+     }, [confirmDelete]);
+
   return (
     <>
-        <div className={`update-profile-bg ${confirmDelete ? 'overflow-hidden h-screen' : ''}`}>
+        <div className="update-profile-bg">
             <MainLayout>
                 <AppToaster/>
                 <main className="flex flex-col justify-center items-center pt-8 pb-8 body-text">

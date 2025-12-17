@@ -7,36 +7,41 @@ import { AuthContext } from '../context/AuthContext';
 import { leafTypeColors } from "../constants/LeafTypeColors";
 import Pagination from "../components/Pagination";
 import { visibilityColors } from "../constants/VisibilityColors";
-export default function StartBrewing(){
+import BrewModal from "../components/BrewModal";
+import BrewDeletionModal from "../components/BrewDeletionModal";
+import EditBrewModal from "../components/EditBrewModal";
+
+export default function MyBrews(){
     const [isPrivate, setIsPrivate] = useState(false);
     const {token} = useContext(AuthContext);
     const [brewProfile, setBrewProfile] = useState([]);
-    const [iotStatus, setIOTStatus] = useState({
-        connectivity : 'OFFLINE',
-        current_handle : null
-    });
+    const [previewTea, setPreviewTea] = useState(null);
+    const [teaToDelete, setTeaToDelete] = useState(null);
+    const [teaToEdit, setTeaToEdit] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");        
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
     const totalPages = Math.ceil(brewProfile.length/ itemsPerPage);
     const currentData = brewProfile.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-
-    const fetchBrewProfiles = useCallback(async (query= "") => {
+    const fetchBrewProfiles = useCallback(async (title="") => {
         try{
-            let url = isPrivate? '/api/brewprofile/owned-private' : '/api/brewprofile'
             
-            if(query){
-                url += `?title=${encodeURIComponent(query)}`
+            let url = isPrivate?  `/api/brewprofile/owned?visibility=1` : `/api/brewprofile/owned?visibility=0`;
+            
+            if(title){
+                url += `&title=${encodeURIComponent(title)}`;
             }
-
-            // console.log("Fetching URL:", url);
-            const headers = (isPrivate && token) ? { Authorization: `Bearer ${token}` } 
-                : undefined;
-            const res = await fetch(url, {
+            
+            console.log(url);
+            const res = await fetch(url,{
                 method : 'GET',
-                headers: headers
-            });
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept' : 'application/json',
+                    Authorization : `Bearer ${token}`
+                }
+            })
 
             if (!res.ok){
                 throw new Error("Failed to fetch brew profiles.");
@@ -57,23 +62,14 @@ export default function StartBrewing(){
 
     useEffect ( () => {
         fetchBrewProfiles("");
-    }, [fetchBrewProfiles]);
+    }, [fetchBrewProfiles, isPrivate, teaToEdit]);
 
-    // useEffect ( () => {
-    //     const fetchIoTData = async () => {
-
-    //     }
-    // }, [iotStatus]);
-
+    
     const handleSearch = (e) => {
         e.preventDefault();
         fetchBrewProfiles(searchQuery);
     }
 
-    const handleBrew = (e) => {
-       e.preventDefault();
-       setIOTStatus({...iotStatus, current_handle : e.target.value, connectivity : 'BUSY'});
-    }
 
     const formatSecondsToMMSS = (totalSeconds) => {
         if (totalSeconds == null || Number.isNaN(Number(totalSeconds))) return '—';
@@ -83,21 +79,52 @@ export default function StartBrewing(){
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
+    useEffect(() => {
+            if (previewTea || teaToDelete || teaToEdit) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'unset';
+            }
+
+            return () => {
+                document.body.style.overflow = 'unset';
+            };
+     }, [previewTea, teaToDelete, teaToEdit]);
+
+    const handleDelete = async () => {
+    
+        const requestToast = toast.loading("Processing Request..."); 
+        
+        try{ 
+            const res = await fetch(`/api/brewprofile/${teaToDelete.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept' : 'application/json',
+                    Authorization : `Bearer ${token}`
+                },
+            });
+
+
+            const data = await res.json();
+            console.log(data);
+            if (!res.ok) {
+               const errorData = data.errors;
+               throw errorData;
+            }
+            
+            toast.success("Brew profile delted successfully.", {id : requestToast});
+        }catch(error){
+            toast.error(error.message, {id : requestToast});
+        }
+    }
     return (
         <>
             <div className="update-profile-bg">
                 <MainLayout>
                     <main className="flex flex-col items-center min-h-screen pt-8 pb-8 gap-y-4 w-full font-serif">
                         <AppToaster />
-                         <div className="flex flex-col rounded-lg p-4 items-center justify-center w-[50%] bg-linear-45 from-indigo-100 to-red-100">
-                            <h1>IOT Device</h1>
-                            <div className="flex flex-col gap-x-2 justify-evenly items-center">
-                                <h1>Status: {iotStatus.connectivity}</h1>
-                                {iotStatus.current_handle && (
-                                    <h1>Currently Handling: {iotStatus.current_handle}</h1>
-                                )}
-                            </div>
-                         </div>
+                        <h1 className="emphasis-text text-4xl lg:text-6xl font-bold text-yellow-300 mb-8 shadow-md">My Brew Profiles</h1>
                          <div className="flex flex-col items-center rounded-lg p-4 gap-y-4 w-[90%] bg-white/40">
                             <div className="w-full flex items-center justify-center">
                                 <form onSubmit={handleSearch} className="flex gap-x-4 justify-center w-full">
@@ -123,8 +150,16 @@ export default function StartBrewing(){
                                             <div key={profile.id} className="flex flex-col justify-center border-2 border-neutral-950 rounded-lg p-4 bg-linear-45 from-indigo-100
                                              to-red-100 backdrop-blur-md lg:hover:scale-105 hover:cursor-pointer">
                                                 <div className="lg:grid lg:grid-cols-4 w-full gap-x-8 lg:gap-x-4 justify-center items-center">
-                                                    <div className="lg:justify-items-start grid grid-cols-1 w-full">
-                                                        <p className="text-xl text-md font-bold mb-2">{profile.title}</p>
+                                                    {/* <div className="lg:justify-items-start grid grid-cols-1 w-full transition-all duration-500 ease-in-out hover:bg-gradient-to-b hover:from-amber-200 hover:to-amber-500 hover:bg-clip-text hover:text-transparent "> */}
+                                                 <div className="lg:justify-items-start grid grid-cols-1 w-full">
+                                                        <div className="bg-clip-text text-transparent
+                                                    bg-[linear-gradient(to_right,theme(colors.black)_30%,theme(colors.amber.400/.8)_50%,theme(colors.black)_70%)]
+                                                    bg-[length:300%_100%]
+                                                    bg-left                                              
+                                                    transition-[background-position] duration-[1500ms] ease-in-out
+                                                    hover:bg-right" onClick={() => setPreviewTea(profile)}>
+                                                            <p className="text-xl text-md font-bold mb-2">{profile.title}</p>
+                                                        </div>
                                                         <p>By: {profile.user}</p>       
                                                     </div>
                                                     <div className="lg:grid  lg:grid-cols-1 lg:justify-items-center lg:align-items-center w-full">
@@ -135,16 +170,24 @@ export default function StartBrewing(){
                                                         <p className="text-center font-bold">Duration</p>
                                                         <p className="p-2 text-center">{formatSecondsToMMSS(profile.duration)}</p>
                                                     </div>
-                                                    <div className="flex justify-center">
-                                                        <button value={profile.title} onClick={handleBrew} className="border-2 border-green-900 rounded-full w-12 h-12 bg-green-500 cursor-pointer">&#9654;</button>
+                                                    <div className="flex justify-center gap-x-4">
+                                                        <button value={profile} type="button" onClick={() => setTeaToEdit(profile)}  className="border-2 border-blue-900 rounded-full p-2 bg-blue-500 cursor-pointer">Edit</button>
+                                                        <button value={profile} type="button" onClick={() => setTeaToDelete(profile)}  className="border-2 border-red-900 rounded-full p-2  bg-red-500 cursor-pointer">Delete</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         ))}
                                     </form>
                                 )}
+                                {teaToDelete && (
+                                    <BrewDeletionModal name={teaToDelete.title} onClose={() => setTeaToDelete(null)} onDelete={handleDelete}/> 
+                                )}
                             </div>
                             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}/>
+                            {previewTea &&(
+                                <BrewModal tea={previewTea} onClose={() => setPreviewTea(null)}/>
+                            )}
+                            {teaToEdit &&(<EditBrewModal previousData={teaToEdit} onClose={() => setTeaToEdit(null)}/>)}
                          </div>
                     </main>
                 </MainLayout>

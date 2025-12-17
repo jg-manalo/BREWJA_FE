@@ -49,9 +49,7 @@ export default function CreateBrew(){
         fetchLeafType();
     }, [token])
 
-    const handleSubmitBrew = async (e) =>  {
-        e.preventDefault();
-        
+    const handleSubmitBrew = async () =>  {
         const requestToast = toast.loading("Processing Request..."); 
 
         try{

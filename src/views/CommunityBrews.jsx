@@ -19,7 +19,21 @@ export default function CommunityBrews() {
       };
       fetchBrewProfiles();
   }, []);
- 
+  
+
+  useEffect(() => {
+            if (previewTea) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'unset';
+            }
+
+            return () => {
+                document.body.style.overflow = 'unset';
+            };
+  }, [previewTea]);
+
+
   const handlePreviewTea = (tea) => {
       setPreviewTea(tea);
   }
