@@ -33,7 +33,6 @@ export default function MyBrews(){
                 url += `&title=${encodeURIComponent(title)}`;
             }
             
-            console.log(url);
             const res = await fetch(url,{
                 method : 'GET',
                 headers: {
@@ -70,6 +69,11 @@ export default function MyBrews(){
         fetchBrewProfiles(searchQuery);
     }
 
+    useEffect(() => {
+        if(currentPage > 0 && isPrivate){
+            setCurrentPage(1);
+        }
+    }, [isPrivate, currentPage]);
 
     const formatSecondsToMMSS = (totalSeconds) => {
         if (totalSeconds == null || Number.isNaN(Number(totalSeconds))) return '—';
@@ -118,6 +122,7 @@ export default function MyBrews(){
             toast.error(error.message, {id : requestToast});
         }
     }
+
     return (
         <>
             <div className="update-profile-bg">
@@ -183,7 +188,7 @@ export default function MyBrews(){
                                     <BrewDeletionModal name={teaToDelete.title} onClose={() => setTeaToDelete(null)} onDelete={handleDelete}/> 
                                 )}
                             </div>
-                            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}/>
+                            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} traversingPrivate={isPrivate}/>
                             {previewTea &&(
                                 <BrewModal tea={previewTea} onClose={() => setPreviewTea(null)}/>
                             )}

@@ -59,6 +59,12 @@ export default function StartBrewing(){
         fetchBrewProfiles("");
     }, [fetchBrewProfiles]);
 
+    useEffect(() => {
+        if(currentPage > 0 && isPrivate){
+            setCurrentPage(1);
+        }
+    }, [isPrivate, currentPage]);
+
     // useEffect ( () => {
     //     const fetchIoTData = async () => {
 
