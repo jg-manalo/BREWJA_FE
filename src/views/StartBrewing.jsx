@@ -29,7 +29,7 @@ export default function StartBrewing(){
             if(query){
                 url += `?title=${encodeURIComponent(query)}`
             }
-            console.log(url);
+
             const headers = (isPrivate && token) ? { Authorization: `Bearer ${token}` } 
                 : undefined;
             const res = await fetch(url, {
@@ -46,10 +46,11 @@ export default function StartBrewing(){
                 ? data 
                 : (data.data && Array.isArray(data.data) ? data.data : []);
 
-            console.log(profileList)
+
             setBrewProfile(profileList);
         } catch(err){
-            toast.error(err.messsage);
+            console.error(err);
+            toast.error("Error fetching brew profiles.");
         }
     }, [token, isPrivate]);
 
@@ -118,7 +119,8 @@ export default function StartBrewing(){
                                 {currentData.length > 0 && (
                                     <form className="flex flex-col gap-y-4">
                                         {currentData.map((profile) => (
-                                            <div key={profile.id} className="flex flex-col justify-center border-2 border-neutral-950 rounded-lg p-4 bg-linear-45 from-indigo-100 to-red-100 backdrop-blur-md">
+                                            <div key={profile.id} className="flex flex-col justify-center border-2 border-neutral-950 rounded-lg p-4 bg-linear-45 from-indigo-100
+                                             to-red-100 backdrop-blur-md lg:hover:scale-105 hover:cursor-pointer">
                                                 <div className="lg:grid lg:grid-cols-4 w-full gap-x-8 lg:gap-x-4 justify-center items-center">
                                                     <div className="lg:justify-items-start grid grid-cols-1 w-full">
                                                         <p className="text-xl text-md font-bold mb-2">{profile.title}</p>
@@ -126,7 +128,7 @@ export default function StartBrewing(){
                                                     </div>
                                                     <div className="lg:grid  lg:grid-cols-1 lg:justify-items-center lg:align-items-center w-full">
                                                         <p className="text-center font-bold">Leaf Type</p>
-                                                        <p className={`lg:w-[20%] text-center p-2 rounded-lg ${leafTypeColors[profile.leaf_type_id]}`}>{profile.leaf_type}</p>
+                                                        <p className={`lg:w-[25%] text-center p-2 rounded-lg ${leafTypeColors[profile.leaf_type_id]}`}>{profile.leaf_type}</p>
                                                     </div>
                                                     <div className="grid grid-cols-1 justify-items-center align-items-center w-full">
                                                         <p className="text-center font-bold">Duration</p>

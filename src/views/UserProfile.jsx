@@ -245,7 +245,7 @@ export default function UserProfile() {
 
   return (
     <>
-        <div className='update-profile-bg'>
+        <div className={`update-profile-bg ${confirmDelete ? 'overflow-hidden h-screen' : ''}`}>
             <MainLayout>
                 <AppToaster/>
                 <main className="flex flex-col justify-center items-center pt-8 pb-8 body-text">

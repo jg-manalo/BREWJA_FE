@@ -2,33 +2,35 @@ import MainLayout from '../layouts/MainLayout';
 import Card from '../components/Card';
 import { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
+import BrewModal from '../components/BrewModal';
 export default function CommunityBrews() {
   const [teas, setTeas] = useState([]);
-
-  useEffect(() => {
-    const fetchBrewProfiles = async () => {
-      try {
-        await fetch('/api/brewprofile/')
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            setTeas(Array.isArray(data.data) ? data.data : [data]);
-          });
-
-      } catch (error) {
-        console.error('Error fetching brew profiles:', error);
-      }
-    };
-
-    fetchBrewProfiles();
+  const [previewTea, setPreviewTea] = useState(null);
+  
+  useEffect(() => { 
+      const fetchBrewProfiles = async () => {
+          try{
+              const response = await fetch('/api/brewprofile/');
+              const data = await response.json();
+              setTeas(Array.isArray(data.data) ? data.data : [data]);
+          } catch (error){
+              console.error('Error fetching brew profiles:', error);      
+          }
+      };
+      fetchBrewProfiles();
   }, []);
-
+ 
+  const handlePreviewTea = (tea) => {
+      setPreviewTea(tea);
+  }
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const totalPages = Math.ceil(teas.length/ itemsPerPage);
   const currentData = teas.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+ 
+ 
   return (
-    <div className='update-profile-bg bg-gray-900/60'>
+    <div className={`update-profile-bg bg-gray-900/60 ${previewTea ? 'overflow-hidden h-screen' : ''} `}>
       <MainLayout>
         <div className="min-h-screen w-full py-8">
           <h1 className="text-4xl font-bold text-yellow-300 text-center mb-8 shadow-md">
@@ -40,6 +42,7 @@ export default function CommunityBrews() {
                 <Card
                   key={tea.id}
                   tea={tea}
+                  onViewDetails={() => handlePreviewTea(tea)}
                   className="bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-transform duration-200"
                 />
               ))
@@ -52,6 +55,9 @@ export default function CommunityBrews() {
           </div>
         </div>
       </MainLayout>
+      {previewTea &&(
+        <BrewModal tea={previewTea} onClose={() => setPreviewTea(null)}/>
+      )}
     </div>
   );
 }

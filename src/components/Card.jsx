@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import defaultImage from '../assets/tea.png';
 
-export default function Card({ tea }) {
+export default function Card({ tea, onViewDetails }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
       <img
@@ -18,13 +18,12 @@ export default function Card({ tea }) {
             : tea.description}
         </p>
 
-        {/* Clickable link that navigates to tea details */}
-        <Link
-          to={`/tea/${tea.id}`}
-          className="mt-4 bg-green-600 text-white px-4 py-2 rounded self-start hover:bg-green-700 transition-colors"
+        <button
+          onClick={onViewDetails}
+          className="mt-4 cursor-pointer bg-green-600 text-white px-4 py-2 rounded self-start hover:bg-green-700 transition-colors"
         >
           View Details
-        </Link>
+        </button>
       </div>
     </div>
   );
