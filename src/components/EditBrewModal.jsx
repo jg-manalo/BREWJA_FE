@@ -70,7 +70,7 @@ export default function EditBrewModal({previousData, onClose}){
                const errorData = data.errors || data.message;
                throw errorData;
             }else{
-                toast.success("Brew profile created successfully.", {id : requestToast}); 
+                toast.success(data.message, {id : requestToast}); 
             }
 
         }catch(err){
