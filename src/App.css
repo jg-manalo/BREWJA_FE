@@ -32,6 +32,22 @@
     background-image: url('/src/assets/brews.png');
     background-size: cover;
     background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
+    background-blend-mode: overlay;
+}
+
+.start-brewing-page-bg{
+    background-image: url('/src/assets/apothecary.png');
+    background-size: cover;
+    background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
+    background-blend-mode: overlay;
+}
+
+.my-brews-page-bg{
+    background-image: url('/src/assets/shelf.png');
+    background-size: cover;
+    background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     background-blend-mode: overlay;
 }
