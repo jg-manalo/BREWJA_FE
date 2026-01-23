@@ -23,4 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-./constants/address.js
+src/constants/address.js
