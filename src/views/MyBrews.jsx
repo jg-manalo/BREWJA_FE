@@ -125,7 +125,7 @@ export default function MyBrews(){
 
     return (
         <>
-            <div className="update-profile-bg">
+            <div className="my-brews-page-bg">
                 <MainLayout>
                     <main className="flex flex-col items-center min-h-screen pt-8 pb-8 gap-y-4 w-full font-serif">
                         <AppToaster />
@@ -157,13 +157,13 @@ export default function MyBrews(){
                                                 <div className="lg:grid lg:grid-cols-4 w-full gap-x-8 lg:gap-x-4 justify-center items-center">
                                                     {/* <div className="lg:justify-items-start grid grid-cols-1 w-full transition-all duration-500 ease-in-out hover:bg-gradient-to-b hover:from-amber-200 hover:to-amber-500 hover:bg-clip-text hover:text-transparent "> */}
                                                  <div className="lg:justify-items-start grid grid-cols-1 w-full">
-                                                        <div className="bg-clip-text text-transparent
+                                                    <div className="bg-clip-text text-transparent
                                                     bg-[linear-gradient(to_right,theme(colors.black)_30%,theme(colors.amber.400/.8)_50%,theme(colors.black)_70%)]
                                                     bg-[length:300%_100%]
                                                     bg-left                                              
                                                     transition-[background-position] duration-[1500ms] ease-in-out
                                                     hover:bg-right" onClick={() => setPreviewTea(profile)}>
-                                                            <p className="text-xl text-md font-bold mb-2">{profile.title}</p>
+                                                        <p className="text-xl text-md font-bold mb-2">{profile.title}</p>
                                                         </div>
                                                         <p>By: {profile.user}</p>       
                                                     </div>
