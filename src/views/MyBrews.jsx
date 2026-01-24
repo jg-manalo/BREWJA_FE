@@ -1,4 +1,4 @@
-import AppToaster from "../components/AppToaster";
+import { formatSecondsToMMSS } from '../utils/formatting/formatSecondsToMMSS';
 import {useState, useEffect, useCallback} from 'react'
 import MainLayout from '../layouts/MainLayout'
 import toast from 'react-hot-toast';
@@ -75,13 +75,7 @@ export default function MyBrews(){
         }
     }, [isPrivate, currentPage]);
 
-    const formatSecondsToMMSS = (totalSeconds) => {
-        if (totalSeconds == null || Number.isNaN(Number(totalSeconds))) return '—';
-        const secs = Math.max(0, Math.floor(Number(totalSeconds)));
-        const minutes = Math.floor(secs / 60);
-        const seconds = secs % 60;
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
+   
 
     useEffect(() => {
             if (previewTea || teaToDelete || teaToEdit) {
@@ -128,7 +122,7 @@ export default function MyBrews(){
             <div className="my-brews-page-bg">
                 <MainLayout>
                     <main className="flex flex-col items-center min-h-screen pt-8 pb-8 gap-y-4 w-full font-serif">
-                        <AppToaster />
+                        {/* <AppToaster /> */}
                         <h1 className="emphasis-text text-4xl lg:text-6xl font-bold text-yellow-300 mb-8 shadow-md">My Brew Profiles</h1>
                          <div className="flex flex-col items-center rounded-lg p-4 gap-y-4 w-[90%] bg-white/40">
                             <div className="w-full flex items-center justify-center">
@@ -192,7 +186,7 @@ export default function MyBrews(){
                             {previewTea &&(
                                 <BrewModal tea={previewTea} onClose={() => setPreviewTea(null)}/>
                             )}
-                            {teaToEdit &&(<EditBrewModal previousData={teaToEdit} onClose={() => setTeaToEdit(null)}/>)}
+                            {teaToEdit &&(<EditBrewModal previousData={teaToEdit} onClose={() => setTeaToEdit(null)} token={token}/> )}
                          </div>
                     </main>
                 </MainLayout>

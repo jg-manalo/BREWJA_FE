@@ -24,6 +24,8 @@ export default function AppToaster(){
                   },
                   className: "emphasis-text text-red-100  border-2 border-red-900 shadow-[0_0_15px_rgba(239,68,68,0.4)]",
                 },
+
+                duration: 3000, //seconds
               }}
             />
         </>

@@ -1,18 +1,15 @@
 import {useState, useEffect} from 'react'
 import toast from 'react-hot-toast';
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
 import defaultImage from '../assets/tea.png';
 import LeafBadge from "../components/LeafBadgeButton";
 import { leafTypeColors } from "../constants/LeafTypeColors";
 import { visibilityColors } from "../constants/VisibilityColors";
-import AppToaster from '../components/AppToaster';
-export default function EditBrewModal({previousData, onClose}){
+import { apiPromise } from '../utils/api/apiPromise';
+
+export default function EditBrewModal({previousData, onClose, token}){
     const [showLeafOption, setShowLeafOption] = useState(false);
-    const {token} = useContext(AuthContext);
     const [leafType, setLeafType] = useState([]);
     const [error, setError] = useState("");
-
    
     const [brew ,setBrew] = useState({
         title : previousData?.title || '',
@@ -24,83 +21,115 @@ export default function EditBrewModal({previousData, onClose}){
         tsp_sweetener : previousData?.tsp_sweetener || null,
         fluid_oz : previousData?.fluid_oz || null,
         is_private : previousData?.is_private || false,
-        image : previousData?.image || null,
     });
 
+    const [brewImage, setBrewImage] = useState({
+        image : previousData?.image || null,
+        imagePreview : previousData?.image || null,
+    });
+ 
     useEffect ( () => {
         const fetchLeafType = async () => {
-            try{
-                const res = await fetch ('/api/leaf-type/', {
-                    method : 'GET',
-                    headers: token ?  {
-                        Authorization : `Bearer ${token}`
-                    } : undefined
+            try {
+                const data = await apiPromise('/api/leaf-type/', {
+                    requestMethod: 'GET',
+                    token: token
                 });
-
-                if (!res.ok){
-                    throw new Error("Failed to fetch leaf types.");
-                }
-                const data = await res.json();
                 setLeafType(data);
                 setError("");
-            } catch(err){
+            } catch (err) {
                 toast.error(err);
             }
-        }
+        };
         fetchLeafType();
     }, [token])
 
-    const handleSubmitBrew = async (e) =>  {
+    const handleSubmitBrew = async (e) => {
         e.preventDefault();
-        const requestToast = toast.loading("Processing Request..."); 
 
-        try{
-            const res = await fetch(`/api/brewprofile/${previousData.id}`,{
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept' : 'application/json',
-                    Authorization : `Bearer ${token}`
-                },
-                body : JSON.stringify(brew)
-            });
+        await toast.promise(apiPromise(`/api/brewprofile/${previousData.id}`, {
+            requestMethod : 'PUT',
+            token : token,
+            objectBody : brew
+        }), {
+            loading: 'Processing Request...',
+            success: (data) => {
+                onClose(); 
+                return data.message; 
+            },
+            error: (err) => {
+                setError(err); 
+                console.log(err);
+                return "Error creating brew profile.";
+            },
+        });
+    };
 
-            const data = await res.json();
-            if (!res.ok) {
-               const errorData = data.errors || data.message;
-               throw errorData;
-            }else{
-                toast.success(data.message, {id : requestToast}); 
-            }
-
-        }catch(err){
-            toast.error("Error creating brew profile.", {id : requestToast});
-            setError(err);
-            console.log(err)
-        }
-    }
-
-    console.log(brew);
-    const handleUploadImage = (e) => {
+    const handleUploadImage = async (e) => {
         const file = e.target.files[0];
 
         if(!file) return;
 
-        // Revoke previous URL to prevent memory leaks
-        if (brew.imagePreview) {
-            URL.revokeObjectURL(brew.imagePreview);
-        }
+        const objectUrl = URL.createObjectURL(file);
 
-        setBrew({...brew, image : file, imagePreview : URL.createObjectURL(file)});
+        
+        const formData = new FormData();
+        formData.append('image', file);
+       
+        setBrewImage({...brewImage, imagePreview : objectUrl, image : null});
+        
+        try{
+            const data = await apiPromise(`/api/brewprofile/${previousData.id}/upload-image/`, {
+                requestMethod: 'POST',
+                contentType: 'multipart/form-data',
+                token: token,
+                objectBody: formData,
+            });
+
+            if(data.error){
+                URL.revokeObjectURL(brewImage.imagePreview);
+                toast.error("Image upload failed.");
+                throw data.error;
+            }
+            setBrewImage({...brewImage, imagePreview : objectUrl, image : data.image});
+        }catch(err){
+            toast.error("Image upload failed.");
+            console.log(err);
+            return;
+        }
+    }
+
+    const handleImageRevoke = async () => {
+        const previousImageState = { ...brewImage };
+
+        setBrewImage({ ...brewImage, image: null, imagePreview: null });
+
+        try {
+            const data = await apiPromise(`/api/brewprofile/${previousData.id}/remove-image/`, {
+                requestMethod: 'DELETE',
+                token: token,
+            });
+
+            if (data.error) {
+                throw data.error;
+            }
+
+            if (previousImageState.imagePreview && previousImageState.imagePreview.startsWith('blob:')) {
+                URL.revokeObjectURL(previousImageState.imagePreview);
+            }
+
+        } catch (err) {
+            setBrewImage(previousImageState);
+            
+            toast.error("Image removal failed.");
+            console.log(err);
+        }
     }
 
 
    return (
         <>
-            {/* 1. Added backdrop-blur and fixed positioning */}
             <main className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-serif">
-                <AppToaster/>
-                {/* Close Button: Moved outside form context slightly for easier clicking */}
                 <button 
                     onClick={onClose}
                     className='absolute top-4 right-4 text-stone-50 hover:scale-110 cursor-pointer font-bold z-10 bg-white/20 hover:bg-white/40 rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-md transition-all' 
@@ -108,20 +137,10 @@ export default function EditBrewModal({previousData, onClose}){
                     ✕
                 </button>
 
-                {/* 2. FORM CONTAINER: 
-                   - w-full max-w-2xl: Sets a nice width limit (snug horizontally).
-                   - max-h-[90vh]: Ensures it never touches the very top/bottom of screen.
-                   - flex flex-col: Critical for allowing the child to scroll.
-                */}
                 <form onSubmit={handleSubmitBrew} className='flex flex-col w-full max-w-lg lg:max-w-2xl max-h-[90vh] shadow-2xl rounded-xl overflow-hidden relative'>
                     
-                    {/* 3. INNER CONTENT:
-                       - overflow-y-auto: This makes the scrollbar appear INSIDE the modal.
-                       - h-full: Fills the parent form height.
-                    */}
                     <div className="flex flex-col p-6 gap-y-4 bg-linear-45 from-indigo-100 to-red-100 overflow-y-auto custom-scrollbar">
                         
-                        {/* Header Section */}
                         <div className="flex flex-row items-start justify-between">
                             <div className="flex flex-grow gap-2">
                                 <select name="visibility" id="visibility" value={brew.is_private} onChange={e => setBrew({...brew, is_private : e.target.value === 'true' ? true : false})} className={`${brew.is_private? visibilityColors['Private'] : visibilityColors['Public']} px-3 py-1 rounded-md text-sm font-medium border border-black/5`}>
@@ -137,15 +156,22 @@ export default function EditBrewModal({previousData, onClose}){
                         </div>
                         {error && (<p className="text-red-500 lg:text-xs font-serif">{error.leaf_type}</p>)}
 
-                        {/* Image & Title Section */}
                         <div className="flex flex-col items-center gap-y-4 w-full">
-                            {/* 4. RESPONSIVE IMAGE HEIGHT:
-                               - h-48 (mobile) -> h-64 (tablet) -> h-[300px] (desktop).
-                               - This prevents the image from eating all the screen space on mobile.
-                            */}
-                            <div className="relative w-full h-48 sm:h-64 lg:h-[300px] group rounded-lg overflow-hidden shadow-inner bg-stone-200">
-                                <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={handleUploadImage}  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"/>
-                                <img src={brew.imagePreview?? defaultImage} alt="" className="w-full h-full object-cover" />
+                            <div className="relative w-full h-48 sm:h-64 lg:h-[300px] group rounded-lg overflow-hidden shadow-inner bg-stone-200">  
+                                {brewImage.imagePreview && (
+                                    <button
+                                        type="button"
+                                        onClick={handleImageRevoke} // You will need to create this function
+                                        className="absolute top-2 right-2 z-30 p-1.5 bg-white/80 hover:bg-white rounded-full text-stone-600 hover:text-red-500 transition-colors shadow-sm backdrop-blur-sm cursor-pointer"
+                                        title="Remove image"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                        </svg>
+                                    </button>
+                                )}
+                                <input type="file" accept="image/jpg, image/jpeg, image/png, image/svg" onChange={handleUploadImage}  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"/>
+                                <img src={brewImage.imagePreview?? defaultImage} alt="" className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-gray-800/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
                                     <span className="text-white text-sm font-medium flex items-center gap-2">
                                         Upload Photo
@@ -160,7 +186,6 @@ export default function EditBrewModal({previousData, onClose}){
 
                         <hr className="border-stone-300/50 my-2" />
 
-                        {/* Steeping Info */}
                         <div className="flex justify-center">
                             <h1 className="font-bold complementary-emphasis text-xl text-stone-700">Steeping Info</h1>
                         </div>

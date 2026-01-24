@@ -5,7 +5,7 @@ export default function Card({ tea, onViewDetails }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
       <img
-        src={defaultImage}
+        src={tea.image ?? defaultImage}
         alt="Tea"
         className="w-full h-44 object-cover"
       />
