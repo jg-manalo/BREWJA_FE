@@ -8,7 +8,7 @@ import { leafTypeColors } from "../constants/LeafTypeColors";
 import Pagination from "../components/Pagination";
 import { IOTADDRESS } from "../constants/address";
 import { visibilityColors } from "../constants/VisibilityColors";
-import BrewModal from "../components/BrewModal";
+import BrewModal from "../components/modals/BrewModal";
 import { IOTColors } from "../constants/iotColors";
 export default function StartBrewing(){
     const [isPrivate, setIsPrivate] = useState(false);

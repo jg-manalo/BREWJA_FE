@@ -1,6 +1,7 @@
 
-import { leafTypeColors } from "../constants/LeafTypeColors";
-import { visibilityColors } from '../constants/VisibilityColors';
+import { leafTypeColors } from "../../constants/LeafTypeColors";
+import { visibilityColors } from '../../constants/VisibilityColors';
+import defaultImage from "../../assets/tea.png";
 
 export default function BrewModal({tea, onClose}){
     if (!tea) return null;
@@ -43,6 +44,12 @@ export default function BrewModal({tea, onClose}){
                                 <div className={`px-2 py-1 rounded text-sm ${leafTypeColors[tea.leaf_type_id]}`}>
                                     {tea.leaf_type}
                                 </div>
+                            </div>
+                        </div>
+
+                         <div className="flex flex-col items-center gap-y-4 w-full">
+                            <div className="relative lg:w-[454px] lg:h-[326px] w-[128px] h-[128px] group">
+                                <img src={tea.image?? defaultImage} alt="" className="w-full h-full object-cover" />
                             </div>
                         </div>
 

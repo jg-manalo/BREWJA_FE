@@ -7,7 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 import { leafTypeColors } from "../constants/LeafTypeColors";
 import Pagination from "../components/Pagination";
 import { visibilityColors } from "../constants/VisibilityColors";
-import BrewModal from "../components/BrewModal";
+import BrewModal from "../components/modals/BrewModal";
 import BrewDeletionModal from "../components/BrewDeletionModal";
 import EditBrewModal from "../components/modals/EditBrewModal";
 

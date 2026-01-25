@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/BREWJA_FE/',
   plugins: [react(), tailwindcss()],
     server: {
-    allowedHosts: ['7fa38f2793da.ngrok-free.app'],
+    allowedHosts: ['76e07d3cb572.ngrok-free.app'],
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8000',

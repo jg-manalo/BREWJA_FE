@@ -8,6 +8,7 @@ import { apiPromise } from '../../utils/api/apiPromise';
 
 
 export default function EditBrewModal({previousData, onClose, token}){
+
     const [showLeafOption, setShowLeafOption] = useState(false);
     const [leafType, setLeafType] = useState([]);
     const [error, setError] = useState("");
@@ -97,7 +98,7 @@ export default function EditBrewModal({previousData, onClose, token}){
                 toast.error("Image upload failed.");
                 throw data.error;
             }
-            setBrewImage({...brewImage, imagePreview : objectUrl, image : data.image});
+            setBrewImage({...brewImage, imagePreview : data.image, image : data.image});
         }catch(err){
             toast.error(err?.message || "Image upload failed.");
             console.log(err);

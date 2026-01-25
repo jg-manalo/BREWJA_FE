@@ -2,7 +2,7 @@ import MainLayout from '../layouts/MainLayout';
 import Card from '../components/Card';
 import { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
-import BrewModal from '../components/BrewModal';
+import BrewModal from "../components/modals/BrewModal";
 export default function CommunityBrews() {
   const [teas, setTeas] = useState([]);
   const [previewTea, setPreviewTea] = useState(null);
