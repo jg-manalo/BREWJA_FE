@@ -9,7 +9,7 @@ import Pagination from "../components/Pagination";
 import { visibilityColors } from "../constants/VisibilityColors";
 import BrewModal from "../components/BrewModal";
 import BrewDeletionModal from "../components/BrewDeletionModal";
-import EditBrewModal from "../components/EditBrewModal";
+import EditBrewModal from "../components/modals/EditBrewModal";
 
 export default function MyBrews(){
     const [isPrivate, setIsPrivate] = useState(false);

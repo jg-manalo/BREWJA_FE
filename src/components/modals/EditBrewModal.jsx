@@ -1,10 +1,11 @@
 import {useState, useEffect} from 'react'
 import toast from 'react-hot-toast';
-import defaultImage from '../assets/tea.png';
-import LeafBadge from "../components/LeafBadgeButton";
-import { leafTypeColors } from "../constants/LeafTypeColors";
-import { visibilityColors } from "../constants/VisibilityColors";
-import { apiPromise } from '../utils/api/apiPromise';
+import LeafBadge from "../LeafBadgeButton";
+import ImageHandler from  "../images/ImageHandler";
+import { leafTypeColors } from "../../constants/LeafTypeColors";
+import { visibilityColors } from "../../constants/VisibilityColors";
+import { apiPromise } from '../../utils/api/apiPromise';
+
 
 export default function EditBrewModal({previousData, onClose, token}){
     const [showLeafOption, setShowLeafOption] = useState(false);
@@ -70,6 +71,11 @@ export default function EditBrewModal({previousData, onClose, token}){
 
         if(!file) return;
 
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("File size exceeds 5MB limit.");
+            throw new Error("File size exceeds 5MB limit.");
+        }
+
         const objectUrl = URL.createObjectURL(file);
 
         
@@ -93,7 +99,7 @@ export default function EditBrewModal({previousData, onClose, token}){
             }
             setBrewImage({...brewImage, imagePreview : objectUrl, image : data.image});
         }catch(err){
-            toast.error("Image upload failed.");
+            toast.error(err?.message || "Image upload failed.");
             console.log(err);
             return;
         }
@@ -114,9 +120,9 @@ export default function EditBrewModal({previousData, onClose, token}){
                 throw data.error;
             }
 
-            if (previousImageState.imagePreview && previousImageState.imagePreview.startsWith('blob:')) {
-                URL.revokeObjectURL(previousImageState.imagePreview);
-            }
+            // if (previousImageState.imagePreview && previousImageState.imagePreview.startsWith('blob:')) {
+            //     URL.revokeObjectURL(previousImageState.imagePreview);
+            // }
 
         } catch (err) {
             setBrewImage(previousImageState);
@@ -157,28 +163,11 @@ export default function EditBrewModal({previousData, onClose, token}){
                         {error && (<p className="text-red-500 lg:text-xs font-serif">{error.leaf_type}</p>)}
 
                         <div className="flex flex-col items-center gap-y-4 w-full">
-                            <div className="relative w-full h-48 sm:h-64 lg:h-[300px] group rounded-lg overflow-hidden shadow-inner bg-stone-200">  
-                                {brewImage.imagePreview && (
-                                    <button
-                                        type="button"
-                                        onClick={handleImageRevoke} // You will need to create this function
-                                        className="absolute top-2 right-2 z-30 p-1.5 bg-white/80 hover:bg-white rounded-full text-stone-600 hover:text-red-500 transition-colors shadow-sm backdrop-blur-sm cursor-pointer"
-                                        title="Remove image"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                                        </svg>
-                                    </button>
-                                )}
-                                <input type="file" accept="image/jpg, image/jpeg, image/png, image/svg" onChange={handleUploadImage}  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"/>
-                                <img src={brewImage.imagePreview?? defaultImage} alt="" className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-gray-800/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
-                                    <span className="text-white text-sm font-medium flex items-center gap-2">
-                                        Upload Photo
-                                    </span>
-                                </div>
-                            </div>
-
+                            <ImageHandler 
+                                onUpload={handleUploadImage} 
+                                onRemove={handleImageRevoke} 
+                                imagePreview={brewImage?.imagePreview} 
+                            />
                             <input required type="text" className="text-center w-full text-3xl lg:text-4xl emphasis-text bg-transparent border-b border-transparent hover:border-stone-300 focus:border-stone-500 focus:outline-none transition-colors" placeholder="Brew Title" value={brew.title?? ''} onChange={e => setBrew({...brew, title : e.target.value})}/>
                             
                             <textarea className="w-full text-justify bg-white/50 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-200" rows={3} maxLength={255} placeholder="Describe your brew..." id="" value={brew.description} onChange={e => setBrew({...brew, description : e.target.value})}></textarea>
@@ -247,7 +236,7 @@ export default function EditBrewModal({previousData, onClose, token}){
                             </div>
 
                         <button className="mt-6 w-full cursor-pointer bg-gradient-to-b from-emerald-500 to-teal-800 hover:to-teal-700 text-white shadow-md hover:shadow-emerald-400/50 active:scale-95 transition-all duration-200 border-2 border-green-950/20 px-8 py-3 rounded-xl font-bold tracking-wide uppercase text-sm">
-                            Save Brew
+                            Save Brew Profile
                         </button>
                     </div>
 
