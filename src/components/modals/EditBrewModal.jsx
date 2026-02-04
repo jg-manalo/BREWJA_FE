@@ -27,9 +27,18 @@ export default function EditBrewModal({previousData, onClose, token}){
 
     const [brewImage, setBrewImage] = useState({
         image : previousData?.image || null,
-        imagePreview : previousData?.image || null,
+        imagePreview : previousData?.image || null, // Target the image URL specifically
     });
- 
+    
+    useEffect(() => {
+        // Cleanup function runs when the component unmounts
+        return () => {
+            if (brewImage.imagePreview && brewImage.imagePreview.startsWith('blob:')) {
+                URL.revokeObjectURL(brewImage.imagePreview);
+            }
+        };
+    }, [brewImage.imagePreview]);
+
     useEffect ( () => {
         const fetchLeafType = async () => {
             try {
@@ -70,39 +79,45 @@ export default function EditBrewModal({previousData, onClose, token}){
     const handleUploadImage = async (e) => {
         const file = e.target.files[0];
 
-        if(!file) return;
+        if (!file) return;
 
-        if (file.size > 5 * 1024 * 1024) {
-            toast.error("File size exceeds 5MB limit.");
-            throw new Error("File size exceeds 5MB limit.");
+        if (file.size > 10 * 1024 * 1024) {
+            toast.error("File size exceeds 10MB limit.");
+            return;
         }
 
         const objectUrl = URL.createObjectURL(file);
 
-        
         const formData = new FormData();
         formData.append('image', file);
        
-        setBrewImage({...brewImage, imagePreview : objectUrl, image : null});
+        // Set preview immediately for better UX
+        setBrewImage({...brewImage, imagePreview: objectUrl, image: null});
         
-        try{
-            const data = await apiPromise(`/api/brewprofile/${previousData.id}/upload-image/`, {
+        try {
+            const data = await apiPromise(`/api/brewprofile/${previousData.id}/upload-image`, {
                 requestMethod: 'POST',
-                contentType: 'multipart/form-data',
                 token: token,
                 objectBody: formData,
             });
 
-            if(data.error){
-                URL.revokeObjectURL(brewImage.imagePreview);
+            if (data.error) {
+                URL.revokeObjectURL(objectUrl);
                 toast.error("Image upload failed.");
                 throw data.error;
             }
-            setBrewImage({...brewImage, imagePreview : data.image, image : data.image});
-        }catch(err){
-            toast.error(err?.message || "Image upload failed.");
-            console.log(err);
-            return;
+            
+            setBrewImage({...brewImage, imagePreview: objectUrl, image: data.image});
+            toast.success("Image uploaded!");
+
+            } catch (err) {
+                toast.error(err?.message || "Image upload failed.");
+                console.error(err);
+                setBrewImage({
+                    ...brewImage, 
+                    imagePreview: previousData?.image || null, 
+                    image: previousData?.image || null
+                });
         }
     }
 
@@ -112,26 +127,20 @@ export default function EditBrewModal({previousData, onClose, token}){
         setBrewImage({ ...brewImage, image: null, imagePreview: null });
 
         try {
-            const data = await apiPromise(`/api/brewprofile/${previousData.id}/remove-image/`, {
+            const data = await apiPromise(`/api/brewprofile/${previousData.id}/remove-image`, {
                 requestMethod: 'DELETE',
                 token: token,
             });
 
-            if (data.error) {
-                throw data.error;
-            }
-
-            // if (previousImageState.imagePreview && previousImageState.imagePreview.startsWith('blob:')) {
-            //     URL.revokeObjectURL(previousImageState.imagePreview);
-            // }
+            if (data.error) throw data.error;
+            toast.success("Image removed.");
 
         } catch (err) {
+            console.error(err);
             setBrewImage(previousImageState);
-            
             toast.error("Image removal failed.");
-            console.log(err);
         }
-    }
+}
 
 
    return (

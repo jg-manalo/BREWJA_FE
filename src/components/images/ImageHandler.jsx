@@ -21,7 +21,7 @@ export default function ImageHandler({onUpload, onRemove, imagePreview}) {
                 <div className="absolute inset-0 bg-gray-800/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
                     <div className="flex flex-col text-white text-sm font-medium items-center gap-2">
                         <p>Upload Photo</p>
-                        <p>(Max 5.00 MB)</p>
+                        <p>(Max 10.00 MB)</p>
                     </div>
                 </div>
             </div>
