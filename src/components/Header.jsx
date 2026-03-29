@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Header() {
+export function Header() {
   return (
     <header className="bg-purple-900 py-4 shadow-md">
       {/* Moved horizontal padding (px-6) here */}

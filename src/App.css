@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Modern+Antiqua&family=UnifrakturMaguntia&display=swap');
 @import "tailwindcss";
-/* @import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap'); */
+
 
 .logo-header{
     font-family: UnifrakturMaguntia;
@@ -16,8 +16,36 @@
     /* font-size: 24px; */
 }
 
+.complementary-emphasis{
+    font-family: Modern Antiqua;
+}
+
 .landing-page-bg{
     background-image: url('/src/assets/mainbg.webp');
+    background-size: cover;
+    background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
+    background-blend-mode: overlay;
+}
+
+.create-brews-page-bg{
+    background-image: url('/src/assets/brews.png');
+    background-size: cover;
+    background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
+    background-blend-mode: overlay;
+}
+
+.start-brewing-page-bg{
+    background-image: url('/src/assets/apothecary.png');
+    background-size: cover;
+    background-position: center;
+    background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
+    background-blend-mode: overlay;
+}
+
+.my-brews-page-bg{
+    background-image: url('/src/assets/shelf.png');
     background-size: cover;
     background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
@@ -54,8 +82,9 @@ label {
 }
 
 .update-profile-bg{
-    background-image: url('/src/assets/hom.png');
+    background-image: url('/src/assets/hom.webp');
     background-size: cover;
+    background-position: center;
     background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     background-blend-mode: overlay;
 }

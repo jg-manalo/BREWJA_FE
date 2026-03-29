@@ -138,10 +138,10 @@ export default function UserProfile() {
                throw errorData;
             }
             
-            setUser(prev => ({
-                ...prev,
-                ...data,
-            }));
+            setSecurity({
+                reset_password_config_id : null,
+                reset_password_config_answer : ""
+            });
 
             setError(null);
 
@@ -180,10 +180,11 @@ export default function UserProfile() {
                throw errorData;
             }
             
-            setUser(prev => ({
-                ...prev,
-                ...data,
-            }));
+            setPassword({
+                current_password : '',
+                new_password : '',
+                new_password_confirmation : ''
+            });
 
             setError(null);
 
@@ -242,9 +243,21 @@ export default function UserProfile() {
         return str.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
     }
 
+    useEffect(() => {
+            if (confirmDelete) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'unset';
+            }
+
+            return () => {
+                document.body.style.overflow = 'unset';
+            };
+     }, [confirmDelete]);
+
   return (
     <>
-        <div className='update-profile-bg'>
+        <div className="update-profile-bg">
             <MainLayout>
                 <AppToaster/>
                 <main className="flex flex-col justify-center items-center pt-8 pb-8 body-text">
@@ -254,7 +267,7 @@ export default function UserProfile() {
                         {/* --- CARD 1: PERSONAL INFO --- */}
                         <form onSubmit={handleUpdatePersonalInfo} className="flex flex-col h-full w-full">
                             {/* increased opacity to /95 and added shadow-xl for pop */}
-                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
                                 <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Your Personal Information</h1>
                                 
                                 <div className="flex flex-col">
@@ -282,7 +295,7 @@ export default function UserProfile() {
                         
                         {/* --- CARD 2: SECURITY QUESTION --- */}
                         <form onSubmit={handleUpdateSecurityQna} className="flex flex-col h-full w-full">
-                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
                                 <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Security Question</h1>
                                 <p className='font-serif text-amber-950'>Whenever you feel your security is compromised, it is better to change your security question.</p>
                                 <div className="flex flex-col">
@@ -310,7 +323,7 @@ export default function UserProfile() {
 
                         {/* --- CARD 3: PASSWORD (Fixed Security Logic) --- */}
                         <form onSubmit={handleUpdatePassword} className="flex flex-col h-full w-full">
-                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/80 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
                                 <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Password</h1>
                                 
                                 {/* ADDED: Current Password Field */}
@@ -342,7 +355,7 @@ export default function UserProfile() {
 
                         {/* --- CARD 4: DELETE ACCOUNT (Better centering) --- */}
                         <div className='flex flex-col h-full w-full'>    
-                            <div className="bg-radial from-orange-100 via-amber-200/90 via-20% to-orange-300/80 backdrop-blur-sm rounded-2xl flex flex-col h-full justify-center items-center p-6 md:p-8 gap-y-6 shadow-xl border border-amber-900/20 text-center">
+                            <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col h-full justify-center items-center p-6 md:p-8 gap-y-6 shadow-xl border border-amber-900/20 text-center">
                                 <div>
                                     <h1 className='emphasis-text text-2xl text-red-900 mb-2'>Delete Your Account</h1>
                                     <h2 className="font-serif text-amber-950">Tread with caution, this action cannot be undone.</h2>

@@ -5,7 +5,7 @@ import AuthProvider from './context/AuthContext.jsx'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  <BrowserRouter basename='/BREWJA_FE/'>
     <AuthProvider>
       <App />
     </AuthProvider>
