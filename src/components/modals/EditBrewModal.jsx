@@ -27,11 +27,10 @@ export default function EditBrewModal({previousData, onClose, token}){
 
     const [brewImage, setBrewImage] = useState({
         image : previousData?.image || null,
-        imagePreview : previousData?.image || null, // Target the image URL specifically
+        imagePreview : previousData?.image || null,
     });
     
     useEffect(() => {
-        // Cleanup function runs when the component unmounts
         return () => {
             if (brewImage.imagePreview && brewImage.imagePreview.startsWith('blob:')) {
                 URL.revokeObjectURL(brewImage.imagePreview);
@@ -81,8 +80,8 @@ export default function EditBrewModal({previousData, onClose, token}){
 
         if (!file) return;
 
-        if (file.size > 10 * 1024 * 1024) {
-            toast.error("File size exceeds 10MB limit.");
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("File size exceeds 2MB limit.");
             return;
         }
 
@@ -91,7 +90,6 @@ export default function EditBrewModal({previousData, onClose, token}){
         const formData = new FormData();
         formData.append('image', file);
        
-        // Set preview immediately for better UX
         setBrewImage({...brewImage, imagePreview: objectUrl, image: null});
         
         try {
@@ -140,7 +138,7 @@ export default function EditBrewModal({previousData, onClose, token}){
             setBrewImage(previousImageState);
             toast.error("Image removal failed.");
         }
-}
+    }
 
 
    return (
