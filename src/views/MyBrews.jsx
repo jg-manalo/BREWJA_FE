@@ -18,16 +18,18 @@ export default function MyBrews(){
     const [previewTea, setPreviewTea] = useState(null);
     const [teaToDelete, setTeaToDelete] = useState(null);
     const [teaToEdit, setTeaToEdit] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");        
+    const [searchQuery, setSearchQuery] = useState("");
+    const [appliedSearch, setAppliedSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
-    const totalPages = Math.ceil(brewProfile.length/ itemsPerPage);
-    const currentData = brewProfile.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const [paginationMeta, setPaginationMeta] = useState({ current_page: 1, last_page: 1 });
+    const [paginationLinks, setPaginationLinks] = useState({ first: null, last: null, prev: null, next: null });
 
-    const fetchBrewProfiles = useCallback(async (title="") => {
+    const fetchBrewProfiles = useCallback(async (page = 1, title="") => {
         try{
             
-            let url = isPrivate?  `/api/brewprofile/owned?visibility=1` : `/api/brewprofile/owned?visibility=0`;
+            let url = isPrivate
+                ? `/api/brewprofile/owned?visibility=1&page=${page}&per_page=8`
+                : `/api/brewprofile/owned?visibility=0&page=${page}&per_page=8`;
             
             if(title){
                 url += `&title=${encodeURIComponent(title)}`;
@@ -53,6 +55,16 @@ export default function MyBrews(){
 
 
             setBrewProfile(profileList);
+            setPaginationMeta({
+                current_page: data?.meta?.current_page ?? page,
+                last_page: data?.meta?.last_page ?? 1,
+            });
+            setPaginationLinks({
+                first: data?.links?.first ?? null,
+                last: data?.links?.last ?? null,
+                prev: data?.links?.prev ?? null,
+                next: data?.links?.next ?? null,
+            });
         } catch(err){
             console.error(err);
             toast.error("Error fetching brew profiles.");
@@ -60,20 +72,19 @@ export default function MyBrews(){
     }, [token, isPrivate]);
 
     useEffect ( () => {
-        fetchBrewProfiles("");
-    }, [fetchBrewProfiles, isPrivate, teaToEdit]);
+        fetchBrewProfiles(currentPage, appliedSearch);
+    }, [fetchBrewProfiles, currentPage, appliedSearch, teaToEdit]);
 
     
     const handleSearch = (e) => {
         e.preventDefault();
-        fetchBrewProfiles(searchQuery);
+        setCurrentPage(1);
+        setAppliedSearch(searchQuery);
     }
 
     useEffect(() => {
-        if(currentPage > 0 && isPrivate){
-            setCurrentPage(1);
-        }
-    }, [isPrivate, currentPage]);
+        setCurrentPage(1);
+    }, [isPrivate]);
 
    
 
@@ -112,6 +123,8 @@ export default function MyBrews(){
             }
             
             toast.success("Brew profile delted successfully.", {id : requestToast});
+            setTeaToDelete(null);
+            fetchBrewProfiles(currentPage, appliedSearch);
         }catch(error){
             toast.error(error.message, {id : requestToast});
         }
@@ -143,9 +156,9 @@ export default function MyBrews(){
                                 </form>
                             </div>
                             <div className="flex flex-col w-full">
-                                {currentData.length > 0 && (
+                                {brewProfile.length > 0 && (
                                     <form className="flex flex-col gap-y-4">
-                                        {currentData.map((profile) => (
+                                        {brewProfile.map((profile) => (
                                             <div key={profile.id} className="flex flex-col justify-center border-2 border-neutral-950 rounded-lg p-4 bg-linear-45 from-indigo-100
                                              to-red-100 backdrop-blur-md lg:hover:scale-105 hover:cursor-pointer">
                                                 <div className="lg:grid lg:grid-cols-4 w-full gap-x-8 lg:gap-x-4 justify-center items-center">
@@ -182,7 +195,13 @@ export default function MyBrews(){
                                     <BrewDeletionModal name={teaToDelete.title} onClose={() => setTeaToDelete(null)} onDelete={handleDelete}/> 
                                 )}
                             </div>
-                            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} traversingPrivate={isPrivate}/>
+                            <Pagination
+                                totalPages={paginationMeta.last_page}
+                                currentPage={paginationMeta.current_page}
+                                onPageChange={setCurrentPage}
+                                meta={paginationMeta}
+                                links={paginationLinks}
+                            />
                             {previewTea &&(
                                 <BrewModal tea={previewTea} onClose={() => setPreviewTea(null)}/>
                             )}
