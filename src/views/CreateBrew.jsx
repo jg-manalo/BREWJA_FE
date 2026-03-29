@@ -4,11 +4,13 @@ import MainLayout from '../layouts/MainLayout'
 import toast from 'react-hot-toast';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import defaultImage from '../assets/tea.png';
 import LeafBadge from "../components/LeafBadgeButton";
 import { leafTypeColors } from "../constants/LeafTypeColors";
+import ImageHandler from "../components/images/ImageHandler";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateBrew(){
+    const navigate = useNavigate();
     const [showLeafOption, setShowLeafOption] = useState(false);
     const {token} = useContext(AuthContext);
     const [leafType, setLeafType] = useState([]);
@@ -25,6 +27,14 @@ export default function CreateBrew(){
         is_private : false,
         image : null
     });
+
+    useEffect(() => {
+        return () => {
+            if (brew.imagePreview && brew.imagePreview.startsWith('blob:')) {
+                URL.revokeObjectURL(brew.imagePreview);
+            }
+        };
+    }, [brew.imagePreview]);
 
     useEffect ( () => {
         const fetchLeafType = async () => {
@@ -49,28 +59,68 @@ export default function CreateBrew(){
         fetchLeafType();
     }, [token])
 
-    const handleSubmitBrew = async () =>  {
+    const handleSubmitBrew = async (e) =>  {
+        e.preventDefault();
         const requestToast = toast.loading("Processing Request..."); 
 
         try{
+            const formData = new FormData();
+
+            const appendIfPresent = (key, value) => {
+                if (value !== null && value !== undefined) {
+                    formData.append(key, value);
+                }
+            };
+
+            appendIfPresent('title', brew.title);
+            appendIfPresent('description', brew.description);
+            appendIfPresent('leaf_type', brew.leaf_type);
+            appendIfPresent('minutes', brew.minutes);
+            appendIfPresent('seconds', brew.seconds);
+            appendIfPresent('sweetener', brew.sweetener);
+            appendIfPresent('tsp_sweetener', brew.tsp_sweetener);
+            appendIfPresent('fluid_oz', brew.fluid_oz);
+            formData.append('is_private', brew.is_private ? 'true' : 'false');
+
+            if (brew.image instanceof File) {
+                formData.append('image', brew.image);
+            }
+
+            // Debug: Log FormData payload
+            for (let [key, value] of formData.entries()) {
+                if (value instanceof File) {
+                    console.log(`FormData: ${key} = [File] name: ${value.name}, size: ${value.size}`);
+                } else {
+                    console.log(`FormData: ${key} =`, value);
+                }
+            }
+
             const res = await fetch(`/api/brewprofile/`,{
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept' : 'application/json',
                     Authorization : `Bearer ${token}`
                 },
-                body : JSON.stringify(brew)
+                body : formData
             });
 
-            const data = await res.json();
+            const contentType = res.headers.get('content-type') || '';
+            let data = null;
+
+            if (contentType.includes('application/json')) {
+                data = await res.json();
+            } else {
+                const textBody = await res.text();
+                data = textBody ? { message: textBody } : null;
+            }
+
             console.log(data);
                 
             if (!res.ok) {
-               const errorData = data.errors || data.message;
+               const errorData = data?.errors || data?.message || "Error creating brew profile.";
                throw errorData;
             }else{
-                toast.success("Brew profile created successfully.", {id : requestToast}); 
+                toast.success("Brew profile created successfully.", {id : requestToast});
+                navigate('/');
             }
 
         }catch(err){
@@ -85,12 +135,24 @@ export default function CreateBrew(){
 
         if(!file) return;
 
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("File size exceeds 2MB limit.");
+            return;
+        }
+
         // Revoke previous URL to prevent memory leaks
         if (brew.imagePreview) {
             URL.revokeObjectURL(brew.imagePreview);
         }
 
         setBrew({...brew, image : file, imagePreview : URL.createObjectURL(file)});
+    }
+
+    const handleImageRevoke = () => {
+        if (brew.imagePreview && brew.imagePreview.startsWith('blob:')) {
+            URL.revokeObjectURL(brew.imagePreview);
+        }
+        setBrew({ ...brew, image: null, imagePreview: null });
     }
 
 
@@ -118,13 +180,11 @@ export default function CreateBrew(){
                                     {error && (<p className="text-red-500 lg:text-xs font-serif">{error.leaf_type}</p>)}
                                 </div>
                                 <div className="flex flex-col items-center gap-y-4 w-full">
-                                    <div className="relative lg:w-[454px] lg:h-[326px] w-[128px] h-[128px] group">
-                                        <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={handleUploadImage}  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"/>
-                                        <img src={brew.imagePreview?? defaultImage} alt="" className="w-full h-full object-cover" />
-                                        <div className="absolute inset-0 bg-gray-800/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center  z-10">
-                                            <span className="text-white text-sm font-medium">Upload Photo</span>
-                                        </div>
-                                    </div>
+                                    <ImageHandler
+                                        onUpload={handleUploadImage}
+                                        onRemove={handleImageRevoke}
+                                        imagePreview={brew.imagePreview}
+                                    />
                                     <input required type="text" className="text-center w-full text-4xl emphasis-text" placeholder="Brew Title" value={brew.title?? ''} onChange={e => setBrew({...brew, title : e.target.value})}/>
                                     <textarea className="w-full text-justify" maxLength={255} placeholder="description" id="" value={brew.description} onChange={e => setBrew({...brew, description : e.target.value})}></textarea>
                                 </div>
