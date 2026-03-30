@@ -32,13 +32,13 @@ export default function Pagination({ totalPages, currentPage, onPageChange, meta
   if (resolvedTotalPages <= 1) return null;
 
   return (
-    <div className="flex justify-center w-full items-center gap-4 mt-8">
+    <div className="flex justify-center w-full items-center gap-1 sm:gap-2 md:gap-4 mt-8 flex-wrap">
 
       {isLaravelPagination && (
         <button
           onClick={() => onPageChange(1)}
           disabled={resolvedCurrentPage === 1}
-          className={`px-4 py-2 rounded font-bold ${
+          className={`px-2 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm font-bold ${
             resolvedCurrentPage === 1
               ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
               : 'bg-green-400 hover:bg-green-500 text-black'
@@ -51,7 +51,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange, meta
       <button
         onClick={() => onPageChange(resolvedCurrentPage - 1)}
         disabled={!canGoPrev}
-        className={`px-4 py-2 rounded font-bold ${
+        className={`px-2 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm font-bold ${
           !canGoPrev
             ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
             : 'bg-green-400 hover:bg-green-500 text-black'
@@ -60,19 +60,19 @@ export default function Pagination({ totalPages, currentPage, onPageChange, meta
         Prev
       </button>
 
-      <div className="flex gap-2">
+      <div className="flex gap-1 sm:gap-2">
         
         {visiblePages[0] > 1 && (
-           <span className="text-white self-end mb-1">...</span>
+           <span className="text-white self-end mb-1 text-xs sm:text-sm">...</span>
         )}
 
         {visiblePages.map((page) => (
           <button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`px-3 py-1 rounded text-xl font-bold transition-colors ${
+            className={`px-2 py-1 sm:px-3 sm:py-1 rounded text-sm sm:text-lg md:text-xl font-bold transition-colors ${
               resolvedCurrentPage === page
-                ? 'bg-yellow-300 text-black scale-110' 
+                ? 'bg-yellow-300 text-black scale-100 sm:scale-110' 
                 : 'text-white hover:bg-gray-700'
             }`}
           >
@@ -81,14 +81,14 @@ export default function Pagination({ totalPages, currentPage, onPageChange, meta
         ))}
 
           {visiblePages[visiblePages.length - 1] < resolvedTotalPages && (
-           <span className="text-white self-end mb-1">...</span>
+           <span className="text-white self-end mb-1 text-xs sm:text-sm">...</span>
         )}
       </div>
 
       <button
         onClick={() => onPageChange(resolvedCurrentPage + 1)}
         disabled={!canGoNext}
-        className={`px-4 py-2 rounded font-bold ${
+        className={`px-2 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm font-bold ${
           !canGoNext
             ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
             : 'bg-green-400 hover:bg-green-500 text-black'
@@ -101,7 +101,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange, meta
         <button
           onClick={() => onPageChange(resolvedTotalPages)}
           disabled={resolvedCurrentPage === resolvedTotalPages}
-          className={`px-4 py-2 rounded font-bold ${
+          className={`px-2 py-1 sm:px-4 sm:py-2 rounded text-xs sm:text-sm font-bold ${
             resolvedCurrentPage === resolvedTotalPages
               ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
               : 'bg-green-400 hover:bg-green-500 text-black'
