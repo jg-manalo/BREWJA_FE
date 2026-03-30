@@ -2,8 +2,11 @@
 import { leafTypeColors } from "../../constants/LeafTypeColors";
 import { visibilityColors } from '../../constants/VisibilityColors';
 import defaultImage from "../../assets/tea.png";
+import { useModalBehavior } from "../../utils/modal/useModal";
 
 export default function BrewModal({tea, onClose}){
+    useModalBehavior(onClose, Boolean(tea));
+
     if (!tea) return null;
 
     const formatSecondsToMMSS = (totalSeconds) =>{

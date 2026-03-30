@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import AppToaster from '../components/AppToaster';
+import { useModalBehavior } from '../utils/modal/useModal';
 
 export default function UserProfile() {
     const {id} = useParams();
@@ -28,8 +29,8 @@ export default function UserProfile() {
         reset_password_config_answer : ""
     });
  
+    useModalBehavior(() => setConfirmDelete(false), confirmDelete);
 
-    
     useEffect(() => {
         const fetchUser = async () => {
             try{
@@ -242,18 +243,6 @@ export default function UserProfile() {
 
         return str.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
     }
-
-    useEffect(() => {
-            if (confirmDelete) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'unset';
-            }
-
-            return () => {
-                document.body.style.overflow = 'unset';
-            };
-     }, [confirmDelete]);
 
   return (
     <>

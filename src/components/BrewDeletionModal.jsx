@@ -1,4 +1,7 @@
+import { useModalBehavior } from '../utils/modal/useModal';
+
 export default function BrewDeletionModal({name, onClose, onDelete}) {
+   useModalBehavior(onClose);
    return(
     <form onSubmit={onDelete} className="fixed inset-0 z-50 flex flex-col justify-center items-center w-full bg-black/70 backdrop-blur-sm p-4">
         <div className="bg-gradient-to-br from-orange-100 via-amber-200 to-orange-300 rounded-2xl flex flex-col lg:max-w-xl w-[90%] justify-center p-8 gap-y-6 shadow-2xl border-2 border-amber-500">
