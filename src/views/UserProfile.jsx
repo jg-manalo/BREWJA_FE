@@ -261,31 +261,25 @@ export default function UserProfile() {
             <MainLayout>
                 <AppToaster/>
                 <main className="flex flex-col justify-center items-center pt-8 pb-8 body-text">
-                    {/* Added max-w-7xl to prevent cards from stretching too wide on huge screens */}
                     <div className='flex flex-col w-full max-w-7xl lg:grid lg:grid-cols-2 lg:gap-8 gap-y-6 px-4'>
-                        
-                        {/* --- CARD 1: PERSONAL INFO --- */}
                         <form onSubmit={handleUpdatePersonalInfo} className="flex flex-col h-full w-full">
-                            {/* increased opacity to /95 and added shadow-xl for pop */}
                             <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col h-full justify-center p-6 md:p-8 gap-y-4 shadow-xl border border-amber-900/20">
                                 <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Your Personal Information</h1>
                                 
                                 <div className="flex flex-col">
-                                    {/* Removed <i>, added font-semibold and distinct text color */}
-                                    <label htmlFor="full-name" className="font-sans font-semibold text-amber-900 mb-1">Full Name</label>  
-                                    {/* Changed bg to stone-50 for higher contrast input area */}
-                                    <input id="full-name" required value={user?.name} onChange={e => setUser({...user, name : e.target.value})} type="text" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
+                                    <label htmlFor="full-name" className="font-serif font-semibold text-amber-900 mb-1">Full Name</label>  
+                                    <input id="full-name" required value={user?.name} onChange={e => setUser({...user, name : e.target.value})} type="text" className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
                                 </div>
 
                                 <div className="flex flex-col items-start">
-                                    <label htmlFor="username" className="font-sans font-semibold text-amber-900 mb-1">Username</label>  
-                                    <input id="username" value={user?.username} onChange={e => setUser({...user, username : e.target.value})} required type="text" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
+                                    <label htmlFor="username" className="font-serif font-semibold text-amber-900 mb-1">Username</label>  
+                                    <input id="username" value={user?.username} onChange={e => setUser({...user, username : e.target.value})} required type="text" className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
                                     {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.username}</p>}
                                 </div>
 
                                 <div className="flex flex-col items-start">
-                                    <label htmlFor="email" className="font-sans font-semibold text-amber-900 mb-1">E-mail</label>  
-                                    <input id="email" value={user?.email} onChange={e => setUser({...user, email : e.target.value})} required type="email" className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
+                                    <label htmlFor="email" className="font-serif font-semibold text-amber-900 mb-1">E-mail</label>  
+                                    <input id="email" value={user?.email} onChange={e => setUser({...user, email : e.target.value})} required type="email" className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all"/>
                                     {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.email}</p>}
                                 </div>
 
@@ -299,8 +293,8 @@ export default function UserProfile() {
                                 <h1 className='emphasis-text text-2xl text-amber-950 mb-2'>Update Security Question</h1>
                                 <p className='font-serif text-amber-950'>Whenever you feel your security is compromised, it is better to change your security question.</p>
                                 <div className="flex flex-col">
-                                    <label htmlFor="security-question" className="font-sans font-semibold text-amber-900 mb-1">New Security Question</label>  
-                                    <select id="security-question" required className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none" value={security.reset_password_config_id ?? ""} onChange={ e =>{ 
+                                    <label htmlFor="security-question" className="font-serif font-semibold text-amber-900 mb-1">New Security Question</label>  
+                                    <select id="security-question" required className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none" value={security.reset_password_config_id ?? ""} onChange={ e =>{ 
                                         const val = e.target.value;
                                         const numValue = val? Number(val) : ""; 
                                         setSecurity({...security, reset_password_config_id : numValue});
@@ -313,8 +307,8 @@ export default function UserProfile() {
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <label htmlFor="security-answer" className="font-sans font-semibold text-amber-900 mb-1">New Security Answer</label>  
-                                    <input id="security-answer" value={security.reset_password_config_answer ?? ''} onChange={e => setSecurity({...security, reset_password_config_answer : e.target.value.toUpperCase()})} required type="text" className="font-sans uppercase bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                    <label htmlFor="security-answer" className="font-serif font-semibold text-amber-900 mb-1">New Security Answer</label>  
+                                    <input id="security-answer" value={security.reset_password_config_answer ?? ''} onChange={e => setSecurity({...security, reset_password_config_answer : e.target.value.toUpperCase()})} required type="text" className="font-serif uppercase bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
                                 </div>
 
                                 <button className="mt-4 mx-auto cursor-pointer bg-gradient-to-b from-emerald-500 to-teal-800 hover:to-teal-700 text-white shadow-md hover:shadow-emerald-400/50 hover:scale-105 transition-all duration-200 border-2 border-green-950 px-8 py-3 rounded-xl font-bold tracking-wide">SAVE CHANGES</button>
@@ -328,22 +322,22 @@ export default function UserProfile() {
                                 
                                 {/* ADDED: Current Password Field */}
                                 <div className="flex flex-col items-start">
-                                    <label htmlFor="current-password" className="font-sans font-semibold text-amber-900 mb-1">Current Password</label>  
-                                    <input id="current-password" required type="password" value={password.current_password?? ''} onChange={e => setPassword({...password, current_password : e.target.value})} placeholder="Verify it's you..." className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                    <label htmlFor="current-password" className="font-serif font-semibold text-amber-900 mb-1">Current Password</label>  
+                                    <input id="current-password" required type="password" value={password.current_password?? ''} onChange={e => setPassword({...password, current_password : e.target.value})} placeholder="Verify it's you..." className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
                                     {error && <p className="font-bold text-rose-700 text-sm mt-1">{error}</p>}    
                                 </div>
                                 
                                 <hr className="border-amber-900/20 my-2"/>
 
                                 <div className="flex flex-col items-start">
-                                    <label htmlFor="new-password" className="font-sans font-semibold text-amber-900 mb-1">New Password</label>  
-                                    <input id="new-password" required type="password" value={password.new_password?? ''} onChange={e => setPassword({...password, new_password : e.target.value})} className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                    <label htmlFor="new-password" className="font-serif font-semibold text-amber-900 mb-1">New Password</label>  
+                                    <input id="new-password" required type="password" value={password.new_password?? ''} onChange={e => setPassword({...password, new_password : e.target.value})} className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
                                     {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.new_password}</p>}    
                                 </div>
 
                                 <div className="flex flex-col items-start">
-                                    <label htmlFor="confirm-password" className="font-sans font-semibold text-amber-900 mb-1">Confirm New Password</label>  
-                                    <input id="confirm-password" required type="password" value={password.new_password_confirmation?? ''} onChange={e => setPassword({...password, new_password_confirmation : e.target.value})} className="font-sans bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
+                                    <label htmlFor="confirm-password" className="font-serif font-semibold text-amber-900 mb-1">Confirm New Password</label>  
+                                    <input id="confirm-password" required type="password" value={password.new_password_confirmation?? ''} onChange={e => setPassword({...password, new_password_confirmation : e.target.value})} className="font-serif bg-stone-50 border border-stone-300 text-stone-900 rounded-lg w-full p-3 focus:ring-2 focus:ring-amber-500 outline-none"/>
                                     {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.new_password}</p>}    
                                     
                                     {/* {error && <p className="font-bold text-rose-700 text-sm mt-1">{error.email}</p>} */}
