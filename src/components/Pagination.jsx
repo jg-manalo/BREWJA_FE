@@ -3,11 +3,9 @@ export default function Pagination({ totalPages, currentPage, onPageChange, meta
   const resolvedCurrentPage = isLaravelPagination ? meta.current_page : currentPage;
   const resolvedTotalPages = isLaravelPagination ? meta.last_page : totalPages;
   
-  // 1. Helper function to calculate which page numbers to show
   const getVisiblePages = () => {
-    const maxVisible = 5; // Limit to 5 page buttons
+    const maxVisible = 5;
 
-    // If total pages are less than the max, just show all of them
     if (resolvedTotalPages <= maxVisible) {
       return Array.from({ length: resolvedTotalPages }, (_, i) => i + 1);
     }

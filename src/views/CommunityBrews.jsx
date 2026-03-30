@@ -62,8 +62,8 @@ export default function CommunityBrews() {
   return (
     <div className={`update-profile-bg bg-gray-900/60 ${previewTea ? 'overflow-hidden h-screen' : ''} `}>
       <MainLayout>
-        <div className="min-h-screen w-full py-8">
-          <h1 className="text-4xl font-bold text-yellow-300 text-center mb-8 shadow-md">
+        <div className="min-h-screen w-full py-8 font-serif">
+          <h1 className="emphasis-text text-4xl lg:text-6xl font-bold text-yellow-300 text-center mb-8 shadow-md">
             Community Brew Profiles
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 items-stretch">
