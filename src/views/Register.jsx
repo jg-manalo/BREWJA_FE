@@ -79,7 +79,7 @@ export default function Register() {
             <AppToaster/>      
             <form onSubmit={handleRegister} className="flex flex-col justify-center items-center w-full">
               <div className="bg-radial from-orange-100 via-amber-200/90 via-10% to-orange-300/60 rounded-2xl flex flex-col lg:max-w-xl w-[80%] justify-center p-4 md:p-8 gap-y-2 md:gap-y-4">
-                <h1 className="flex justify-center emphasis-text text-amber-950 lg:text-6xl text-4xl mx-auto">Brewja Guild</h1>
+                <h1 className="flex justify-center emphasis-text text-black lg:text-6xl text-4xl mx-auto">Brewja Guild</h1>
                 <div className="flex flex-col gap-y-4">
                   <div className="flex flex-col">
                     <label htmlFor="full-name" className="">Full Name</label>  

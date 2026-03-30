@@ -5,9 +5,12 @@ import ImageHandler from  "../images/ImageHandler";
 import { leafTypeColors } from "../../constants/LeafTypeColors";
 import { visibilityColors } from "../../constants/VisibilityColors";
 import { apiPromise } from '../../utils/api/apiPromise';
+import { useModalBehavior } from '../../utils/modal/useModal';
 
 
 export default function EditBrewModal({previousData, onClose, token}){
+
+    useModalBehavior(onClose);
 
     const [showLeafOption, setShowLeafOption] = useState(false);
     const [leafType, setLeafType] = useState([]);

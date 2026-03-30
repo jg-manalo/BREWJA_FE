@@ -86,20 +86,6 @@ export default function MyBrews(){
         setCurrentPage(1);
     }, [isPrivate]);
 
-   
-
-    useEffect(() => {
-            if (previewTea || teaToDelete || teaToEdit) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'unset';
-            }
-
-            return () => {
-                document.body.style.overflow = 'unset';
-            };
-     }, [previewTea, teaToDelete, teaToEdit]);
-
     const handleDelete = async () => {
     
         const requestToast = toast.loading("Processing Request..."); 

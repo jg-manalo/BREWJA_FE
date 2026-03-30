@@ -39,20 +39,6 @@ export default function CommunityBrews() {
       };
       fetchBrewProfiles();
   }, [currentPage]);
-  
-
-  useEffect(() => {
-            if (previewTea) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'unset';
-            }
-
-            return () => {
-                document.body.style.overflow = 'unset';
-            };
-  }, [previewTea]);
-
 
   const handlePreviewTea = (tea) => {
       setPreviewTea(tea);
@@ -60,7 +46,7 @@ export default function CommunityBrews() {
  
  
   return (
-    <div className={`update-profile-bg bg-gray-900/60 ${previewTea ? 'overflow-hidden h-screen' : ''} `}>
+    <div className="community-brews-bg bg-gray-900/60">
       <MainLayout>
         <div className="min-h-screen w-full py-8 font-serif">
           <h1 className="emphasis-text text-4xl lg:text-6xl font-bold text-yellow-300 text-center mb-8 shadow-md">
