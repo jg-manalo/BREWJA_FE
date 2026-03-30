@@ -27,7 +27,7 @@ export default function Nav() {
             </a>
           </li>
           <li>
-            <a href="">
+            <a href="https://github.com/jg-manalo">
               <span className="[&>svg]:h-5 [&>svg]:w-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +40,7 @@ export default function Nav() {
             </a>
           </li>
           <li>
-            <a>
+            <a href="https://www.linkedin.com/in/joaquin-manalo-89a518205/?skipRedirect=true">
               <span className="[&>svg]:h-5 [&>svg]:w-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
