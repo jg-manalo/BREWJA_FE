@@ -6,11 +6,12 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { leafTypeColors } from "../constants/LeafTypeColors";
 import Pagination from "../components/Pagination";
-import { IOTADDRESS } from "../constants/address";
 import { visibilityColors } from "../constants/VisibilityColors";
 import BrewModal from "../components/modals/BrewModal";
-import { IOTColors } from "../constants/iotColors";
+import { IOTColors } from "../constants/IOTColors";
+
 export default function StartBrewing(){
+    const IOTADDRESS = import.meta.env.VITE_IOT_ADDRESS;
     const [isPrivate, setIsPrivate] = useState(false);
     const {token} = useContext(AuthContext);
     const [brewProfile, setBrewProfile] = useState([]);
@@ -71,7 +72,7 @@ export default function StartBrewing(){
         const fetchIoTData = async () => {
             if(iotStatus.connectivity !== 'Busy'){
                 try{
-                    const res = await fetch(`${IOTADDRESS}`,{
+                    const res = await fetch(`${IOTADDRESS}/status`,{
                         method : 'GET',
                     });
     
@@ -92,7 +93,7 @@ export default function StartBrewing(){
         }, 15000);
 
         return () => clearInterval(intervalId);
-    }, [iotStatus.connectivity]);
+    }, [iotStatus.connectivity, IOTADDRESS]);
 
     const handleSearch = (e) => {
         e.preventDefault();
