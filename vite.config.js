@@ -1,18 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/BREWJA_FE/',
+  base: "/",
   plugins: [react(), tailwindcss()],
-    server: {
-    allowedHosts: ['1e8f-112-207-169-27.ngrok-free.app'],
+  server: {
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:8000',
+      "/api": {
+        target: "http://host.docker.internal:8000",
         changeOrigin: true,
-      }
-    }
-  } 
-})
+      },
+    },
+  },
+});

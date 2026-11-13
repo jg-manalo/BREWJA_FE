@@ -1,0 +1,15 @@
+services:
+  server:
+    build:
+      context: .
+      target: dev
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: 'true'
+      WATCHPACK_POLLING: 'true'
+    ports:
+      - 5173:5173
+    image: brewja:1.0.0-dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules

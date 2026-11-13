@@ -1,4 +1,4 @@
-import MainNav from '../components/nav';
+import MainNav from '../components/Nav';
 import Footer from '../components/Footer';
 import AppToaster  from '../components/AppToaster';
 export default function MainLayout({ children }) {
