@@ -8,7 +8,7 @@ import { leafTypeColors } from "../constants/LeafTypeColors";
 import Pagination from "../components/Pagination";
 import { visibilityColors } from "../constants/VisibilityColors";
 import BrewModal from "../components/modals/BrewModal";
-import { IOTColors } from "../constants/IOTColors";
+import { IOTColors } from "../constants/iotColors";
 
 export default function StartBrewing(){
     const IOTADDRESS = import.meta.env.VITE_IOT_ADDRESS;

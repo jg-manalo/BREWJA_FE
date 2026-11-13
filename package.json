@@ -9,8 +9,12 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy" : "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "local-prod": "docker compose -f compose.yaml up -d --build",
+    "stop-local-prod": "docker compose -f compose.yaml down -v",
+    "local-dev": "docker compose -f compose.dev.yml up -d --build",
+    "stop-local-dev": "docker compose -f compose.dev.yml down -v"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
